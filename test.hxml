@@ -1,0 +1,4 @@
+-neko test/test.n
+-lib extension-facebook-rest
+-cp test
+-main Main
