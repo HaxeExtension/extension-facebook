@@ -6,6 +6,5 @@
   "releasenote": "",
   "classPath": "src",
   "dependencies": {
-  	"rest-client": ""
   }
 }

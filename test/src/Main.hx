@@ -1,16 +1,13 @@
 package;
 
-import extension.facebookrest.Graph;
+import haxe.unit.TestRunner;
 
 class Main {
 
 	public static function main() {
-		var g = new Graph();
-		g.login(
-			"1379899895580577",
-			function(s) trace("token: " + s),
-			function() trace("error")
-		);
+		var r = new TestRunner();
+		r.add(new tests.RestClientTest());
+		r.run();
 	}
 
 }
