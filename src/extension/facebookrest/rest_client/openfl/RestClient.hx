@@ -1,6 +1,7 @@
 package extension.facebookrest.rest_client.openfl;
 
 import flash.events.Event;
+import flash.events.HTTPStatusEvent;
 import flash.events.IOErrorEvent;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
@@ -39,11 +40,24 @@ class RestClient {
 		var req = new URLRequest();
 		req.method = method;
 		if (parameters!=null) {
-			var vars = new URLVariables();
-			for (x in parameters.keys()) {
-				vars.x = parameters.get(x);
+			if (method==URLRequestMethod.POST) {
+				var vars = new URLVariables();
+				for (x in parameters.keys()) {
+					Reflect.setField(vars, x, parameters.get(x));
+				}
+				req.data = vars;
+			} else {
+				var s = "";
+				for (x in parameters.keys()) {
+					s += x + "=" + parameters.get(x) + "&";
+				}
+				if (StringTools.endsWith(s, "&")) {
+					s = s.substr(0, s.length-1);
+				}
+				if (s!="") {
+					url += "?" + s;
+				}
 			}
-			req.data = vars;
 		}
 		if (onData!=null) {
 			ldr.addEventListener(Event.COMPLETE, function(e : Event) {
@@ -51,7 +65,11 @@ class RestClient {
 			});
 		}
 		if (onError!=null) {
-			ldr.addEventListener(IOErrorEvent.IO_ERROR, function(e) onError(e.data));
+			ldr.addEventListener(HTTPStatusEvent.HTTP_STATUS, function(c : HTTPStatusEvent) {
+				if(c.status!=200) {
+					onError(c.target.data);
+				}
+			});
 		}
 		req.url = url;
 		ldr.load(req);

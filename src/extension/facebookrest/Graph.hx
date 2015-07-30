@@ -5,6 +5,7 @@ import extension.facebookrest.task.CallTask;
 import extension.facebookrest.task.Task;
 import flash.Lib;
 import flash.net.URLRequest;
+import haxe.Json;
 import sys.net.Host;
 import sys.net.Socket;
 
@@ -21,6 +22,8 @@ class Graph {
 	var taskList : List<Task>;
 	var taskListMutex : Mutex;
 
+	var accessToken : String;
+
 	public function new() {
 		taskList = new List<Task>();
 		taskListMutex = new Mutex();
@@ -28,9 +31,9 @@ class Graph {
 		timer.run = update;
 	}
 
-	public function login(appID : String, onSuccess : String->Void, onFailure : Void -> Void) {
+	public function getToken(appID : String, onSuccess : String->Void, onFailure : Void -> Void) {
 
-		var redirectUri = "http://localhost:8100";
+		var redirectUri = "http://vmoura.dojo/ws_face_prueba";
 		var url = 'https://www.facebook.com/dialog/oauth?client_id=$appID&redirect_uri=$redirectUri';
 
 		Thread.create(function() {
@@ -47,20 +50,20 @@ class Graph {
 					while (str!="") {
 						str = c.input.readLine();
 						if (~/GET \/+/.match(str)) {
-							if (!~/error=+/.match(str)) error = false;
-							var get = str.split(" ")[1];
-							var code = ~/.*code=/.replace(str, "");
-							code = code.split("&")[0];
-							code = code.split(" ")[0];
-							taskListMutex.acquire();
-							if (!error) {
-								taskList.add(new CallStrTask(onSuccess, code));
-							} else {
-								taskList.add(new CallTask(onFailure));
+							str = str.split(" ")[1];
+							str = str.substr(2);
+							for (v in str.split("&")) {
+								var arr = v.split("=");
+								if (arr[0]=="access_token") {
+									this.accessToken = arr[1];
+									addTask(new CallStrTask(onSuccess, this.accessToken));
+									error = false;
+								}
 							}
-							taskListMutex.release();
-
 						}
+					}
+					if (error) {
+						addTask(new CallTask(onFailure));
 					}
 					c.write(error?getErrorHTML():getSuccessHTML());
 					c.close();
@@ -74,7 +77,16 @@ class Graph {
 
 	}
 
+	function addTask(task : Task) {
+		taskListMutex.acquire();
+		taskList.add(task);
+		taskListMutex.release();
+	}
+
 	function update() {
+		if (taskList.isEmpty()) {
+			return;
+		}
 		taskListMutex.acquire();
 		var next = taskList.pop();
 		taskListMutex.release();
@@ -140,6 +152,38 @@ class Graph {
 
 				</body>
 				</html>';
+	}
+
+	public function get(
+		resource : String,
+		onSuccess : Dynamic->Void = null,
+		parameters : Map<String, String> = null,
+		onError : Dynamic->Void = null
+	) : Void {
+
+		RestClient.getAsync(
+			"https://graph.facebook.com/v2.4"+resource+"?"+"access_token="+accessToken,
+			function(x) onSuccess(Json.parse(x)),
+			parameters,
+			function(x) onError(Json.parse(x))
+		);
+
+	}
+
+	public function post(
+		resource : String,
+		onSuccess : Dynamic->Void = null,
+		parameters : Map<String, String> = null,
+		onError : Dynamic->Void = null
+	) : Void {
+
+		RestClient.postAsync(
+			"https://graph.facebook.com/v2.4"+resource+"?"+"access_token="+accessToken,
+			function(x) onSuccess(Json.parse(x)),
+			parameters,
+			function(x) onError(Json.parse(x))
+		);
+
 	}
 
 }
