@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	
+
+	<dependency name="facebook-extension" path="../dependencies/android/facebook" />
+	<android extension="org.haxe.extension.facebook.FacebookExtension" />
+
 </project>

@@ -6,6 +6,8 @@
 	
 	<source path="src" />
 	
+	<set name="legacy" />
+
 	<haxelib name="openfl" />
 	<haxelib name="extension-facebook-rest" />
 	
