@@ -1,5 +1,6 @@
 package tests;
 
+import extension.facebookrest.android.FacebookExtension;
 import extension.facebookrest.FriendsInvite;
 import extension.facebookrest.Graph;
 import haxe.unit.TestCase;
@@ -12,8 +13,12 @@ class FacebookTest extends TestCase {
 
 	public function test() {
 
+		trace("holis?");
+
+		FacebookExtension.init();
+
+		/*
 		var g = new Graph();
-		
 		g.getToken(
 			"1649878375249393",
 			function(s) {
@@ -29,7 +34,7 @@ class FacebookTest extends TestCase {
 			},
 			function() Sys.println("Failure")
 		);
-
+*/
 		/*
 		g.get("/me", printFun.bind("sucess"), printFun.bind("failure"));
 		*/

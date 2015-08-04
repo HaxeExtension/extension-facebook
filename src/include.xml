@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 
-	<dependency name="facebook-extension" path="../dependencies/android/facebook" />
+	<dependency name="facebook-sdk" path="../dependencies/android/facebook-sdk" />
 	<android extension="org.haxe.extension.facebook.FacebookExtension" />
+
+	<haxelib name="inthebox-macros" />
+
+	<template path="extension/template/strings.xml" rename="res/values/strings.xml" />
+	<template path="extension/template/AndroidManifest.xml" rename="AndroidManifest.xml" />
 
 </project>
