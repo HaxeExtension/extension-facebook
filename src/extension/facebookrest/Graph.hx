@@ -1,8 +1,5 @@
 package extension.facebookrest;
 
-import extension.facebookrest.task.CallStrTask;
-import extension.facebookrest.task.CallTask;
-import extension.facebookrest.task.Task;
 import flash.Lib;
 import flash.net.URLRequest;
 import haxe.Json;
@@ -16,6 +13,41 @@ import cpp.vm.Thread;
 import neko.vm.Mutex;
 import neko.vm.Thread;
 #end
+
+private class Task {
+	public function _do() {}
+}
+
+private class CallTask extends Task {
+
+	var fn : Void->Void;
+
+	public function new(fn : Void->Void) {
+		this.fn = fn;
+	}
+
+	override public function _do() {
+		fn();
+	}
+
+}
+
+private class CallStrTask extends Task {
+
+	var fn : String->Void;
+	var str : String;
+
+	public function new(fn : String->Void, str : String) {
+		this.fn = fn;
+		this.str = str;
+	}
+
+	override public function _do() {
+		fn(str);
+	}
+
+}
+
 
 class Graph {
 

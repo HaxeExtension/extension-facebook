@@ -1,10 +1,11 @@
 {
   "name": "extension-facebook-rest",
   
-  "tags": ["rest", "facebook"],
+  "tags": ["openfl", "facebook"],
   "description": "Facebook Graph API client.",
   "releasenote": "",
   "classPath": "src",
   "dependencies": {
+  	
   }
 }

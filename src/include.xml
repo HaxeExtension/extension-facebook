@@ -6,7 +6,7 @@
 
 	<haxelib name="inthebox-macros" />
 
-	<template path="extension/template/strings.xml" rename="res/values/strings.xml" />
-	<template path="extension/template/AndroidManifest.xml" rename="AndroidManifest.xml" />
+	<template path="../template/strings.xml" rename="res/values/strings.xml" />
+	<template path="../template/AndroidManifest.xml" rename="AndroidManifest.xml" />
 
 </project>

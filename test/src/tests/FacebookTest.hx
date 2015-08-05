@@ -13,8 +13,6 @@ class FacebookTest extends TestCase {
 
 	public function test() {
 
-		trace("holis?");
-
 		FacebookExtension.init();
 
 		/*
