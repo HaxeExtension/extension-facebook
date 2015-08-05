@@ -1,5 +1,6 @@
 package tests;
 
+import extension.facebookrest.android.FacebookCallbacks;
 import extension.facebookrest.android.FacebookExtension;
 import extension.facebookrest.FriendsInvite;
 import extension.facebookrest.Graph;
@@ -14,6 +15,7 @@ class FacebookTest extends TestCase {
 	public function test() {
 
 		FacebookExtension.init();
+		FacebookExtension.setCallBackObject(new FacebookCallbacks());
 
 		/*
 		var g = new Graph();
