@@ -6,6 +6,6 @@
   "releasenote": "",
   "classPath": "src",
   "dependencies": {
-  	
+  	"inthebox-macros": ""
   }
 }

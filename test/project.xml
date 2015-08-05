@@ -8,6 +8,8 @@
 	
 	<set name="legacy" />
 
+	<setenv name="FACEBOOK_APP_ID" value="1649878375249393" />
+
 	<haxelib name="openfl" />
 	<haxelib name="extension-facebook-rest" />
 	
