@@ -1,52 +1,44 @@
 package tests;
 
+#if android
 import extension.facebookrest.android.FacebookCallbacks;
 import extension.facebookrest.android.FacebookExtension;
+#end
 import extension.facebookrest.FriendsInvite;
 import extension.facebookrest.Graph;
 import haxe.unit.TestCase;
 
 class FacebookTest extends TestCase {
 	
-	function printFun(prefix : String, str : String) {
-		Sys.println(prefix + " => " + str);
+	function printFun(str : String) {
+		#if mobile
+		trace(str);
+		#else
+		Sys.println(str);
+		#end
 	}
 
 	public function test() {
 
-		FacebookExtension.init();
-		FacebookExtension.setCallBackObject(new FacebookCallbacks());
-
-		/*
-		var g = new Graph();
-		g.getToken(
-			"1649878375249393",
-			function(s) {
+		var graph = new Graph();
+		graph.login(
+			function() {	// Sucess
+				trace("login ok");
 				FriendsInvite.invitableFriends(
-					g,
+					graph,
 					function(friends : Array<UserInvitableFriend>) {
 						for (f in friends) {
-							Sys.println(f.name);
+							printFun(f.name);
 						}
 					},
-					Sys.println
+					printFun
 				);
 			},
-			function() Sys.println("Failure")
+			function() {	// Error
+				trace("error");
+			},
+			"1649878375249393"	// App ID
 		);
-*/
-		/*
-		g.get("/me", printFun.bind("sucess"), printFun.bind("failure"));
-		*/
-
-		/*
-		g.post(
-			"/me/feed",
-			printFun.bind("sucess"),
-			["message"=>"Hola Juan, te saludo"],
-			printFun.bind("failure")
-		);
-		*/
 
 		assertTrue(true);
 

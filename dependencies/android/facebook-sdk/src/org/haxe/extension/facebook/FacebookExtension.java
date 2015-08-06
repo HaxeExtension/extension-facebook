@@ -3,6 +3,9 @@ package org.haxe.extension.facebook;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -15,6 +18,7 @@ import org.haxe.lime.HaxeObject;
 
 public class FacebookExtension extends Extension {
 
+	AccessTokenTracker accessTokenTracker;
 	CallbackManager callbackManager;
 
 	public FacebookExtension() {
@@ -26,7 +30,7 @@ public class FacebookExtension extends Extension {
 				public void onSuccess(LoginResult loginResult) {
 					Log.d("Facebook", "onSucess");
 					if (callbacks!=null) {
-						callbacks.call0("onLoginSucess");
+						callbacks.call1("_onLoginSucess", loginResult.getAccessToken().getToken());
 					}
 				}
 
@@ -34,7 +38,7 @@ public class FacebookExtension extends Extension {
 				public void onCancel() {
 					Log.d("Facebook", "onCancel");
 					if (callbacks!=null) {
-						callbacks.call0("onLoginCancel");
+						callbacks.call0("_onLoginCancel");
 					}
 				}
 
@@ -42,10 +46,26 @@ public class FacebookExtension extends Extension {
 				public void onError(FacebookException exception) {
 					Log.d("Facebook", "onError");
 					if (callbacks!=null) {
-						callbacks.call0("onLoginError");
+						callbacks.call0("_onLoginError");
 					}
 				}
 		});
+		
+		accessTokenTracker = new AccessTokenTracker() {
+			@Override
+			protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+				Log.d("Facebook", "Got token: " + currentAccessToken.getToken());
+				if (callbacks!=null) {
+					callbacks.call1("_onLoginSucess", currentAccessToken.getToken());
+				}
+			}
+		};
+		
+		AccessToken token = AccessToken.getCurrentAccessToken();
+		if (token!=null) {
+			Log.d("Facebook", "Token es: " + token.getToken());
+		}
+		
 	}
 
 	// Static methods interface
@@ -69,6 +89,10 @@ public class FacebookExtension extends Extension {
 	@Override public boolean onActivityResult (int requestCode, int resultCode, Intent data) {
 		callbackManager.onActivityResult(requestCode, resultCode, data);
 		return true;
+	}
+	
+	@Override public void onDestroy() {
+		accessTokenTracker.stopTracking();
 	}
 
 }
