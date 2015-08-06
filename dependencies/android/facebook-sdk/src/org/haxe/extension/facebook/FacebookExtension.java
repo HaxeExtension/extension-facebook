@@ -12,6 +12,9 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.facebook.share.model.AppInviteContent;
+import com.facebook.share.widget.AppInviteDialog;
+
 import java.util.ArrayList;
 import org.haxe.extension.Extension;
 import org.haxe.lime.HaxeObject;
@@ -78,6 +81,16 @@ public class FacebookExtension extends Extension {
 
 	public static void init(){
 		LoginManager.getInstance().logInWithReadPermissions(mainActivity, new ArrayList<String>());
+	}
+	
+	public static void appInvite(String applinkUrl, String previewImageUrl) {
+		if (AppInviteDialog.canShow()) {
+			AppInviteContent content = new AppInviteContent.Builder()
+					.setApplinkUrl(applinkUrl)
+					.setPreviewImageUrl(previewImageUrl)
+					.build();
+			AppInviteDialog.show(mainActivity, content);
+		}
 	}
 
 	// !Static methods interface

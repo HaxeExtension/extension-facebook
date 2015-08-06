@@ -4,12 +4,13 @@ package tests;
 import extension.facebookrest.android.FacebookCallbacks;
 import extension.facebookrest.android.FacebookExtension;
 #end
+import extension.facebookrest.AppInvite;
+import extension.facebookrest.Facebook;
 import extension.facebookrest.FriendsInvite;
-import extension.facebookrest.Graph;
 import haxe.unit.TestCase;
 
 class FacebookTest extends TestCase {
-	
+
 	function printFun(str : String) {
 		#if mobile
 		trace(str);
@@ -20,12 +21,11 @@ class FacebookTest extends TestCase {
 
 	public function test() {
 
-		var graph = new Graph();
-		graph.login(
+		var face = new Facebook();
+		face.login(
 			function() {	// Sucess
-				trace("login ok");
 				FriendsInvite.invitableFriends(
-					graph,
+					face,
 					function(friends : Array<UserInvitableFriend>) {
 						for (f in friends) {
 							printFun(f.name);
@@ -33,6 +33,7 @@ class FacebookTest extends TestCase {
 					},
 					printFun
 				);
+				AppInvite.invite("https://fb.me/1654475341456363");
 			},
 			function() {	// Error
 				trace("error");

@@ -9,12 +9,12 @@ typedef UserInvitableFriend = { id : String, name : String, picture : UserInvita
 class FriendsInvite {
 	
 	public static function invitableFriends(
-		graph : Graph,
+		f : Facebook,
 		onSuccess : Array<UserInvitableFriend>->Void,
 		onError : Dynamic->Void
 	) : Void {
 		
-		graph.get(
+		f.get(
 			"/me/invitable_friends",
 			function(data) {
 				onSuccess(data.data);

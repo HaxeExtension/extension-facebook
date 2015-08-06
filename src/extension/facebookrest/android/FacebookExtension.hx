@@ -8,6 +8,9 @@ class FacebookExtension {
 	@JNI("org.haxe.extension.facebook", "init")
 	public static function init() {}
 
+	@JNI("org.haxe.extension.facebook", "appInvite")
+	public static function appInvite(appLinkUrl : String, previewImageUrl : String) {}
+
 	public static function setCallBackObject(c : FacebookCallbacks) {
 		var fn = JNI.createStaticMethod(
 			"org.haxe.extension.facebook.FacebookExtension",
