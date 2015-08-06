@@ -1,9 +1,9 @@
 package org.haxe.extension.facebook;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -13,8 +13,9 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.share.model.AppInviteContent;
+import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.AppInviteDialog;
-
+import com.facebook.share.widget.ShareDialog;
 import java.util.ArrayList;
 import org.haxe.extension.Extension;
 import org.haxe.lime.HaxeObject;
@@ -23,10 +24,12 @@ public class FacebookExtension extends Extension {
 
 	AccessTokenTracker accessTokenTracker;
 	CallbackManager callbackManager;
+	static ShareDialog shareDialog;
 
 	public FacebookExtension() {
 		FacebookSdk.sdkInitialize(mainContext);
 		callbackManager = CallbackManager.Factory.create();
+		shareDialog = new ShareDialog(mainActivity);
 		LoginManager.getInstance().registerCallback(callbackManager,
 			new FacebookCallback<LoginResult>() {
 				@Override
@@ -90,6 +93,15 @@ public class FacebookExtension extends Extension {
 					.setPreviewImageUrl(previewImageUrl)
 					.build();
 			AppInviteDialog.show(mainActivity, content);
+		}
+	}
+
+	public static void shareLink(String url) {
+		ShareLinkContent content = new ShareLinkContent.Builder()
+			.setContentUrl(Uri.parse(url))
+			.build();
+		if (shareDialog!=null) {
+			shareDialog.show(content);
 		}
 	}
 

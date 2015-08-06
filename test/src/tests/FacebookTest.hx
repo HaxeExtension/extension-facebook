@@ -1,12 +1,9 @@
 package tests;
 
-#if android
-import extension.facebookrest.android.FacebookCallbacks;
-import extension.facebookrest.android.FacebookExtension;
-#end
 import extension.facebookrest.AppInvite;
 import extension.facebookrest.Facebook;
-import extension.facebookrest.FriendsInvite;
+import extension.facebookrest.FriendList;
+import extension.facebookrest.Share;
 import haxe.unit.TestCase;
 
 class FacebookTest extends TestCase {
@@ -24,7 +21,7 @@ class FacebookTest extends TestCase {
 		var face = new Facebook();
 		face.login(
 			function() {	// Sucess
-				FriendsInvite.invitableFriends(
+				FriendList.invitableFriends(
 					face,
 					function(friends : Array<UserInvitableFriend>) {
 						for (f in friends) {
@@ -33,7 +30,8 @@ class FacebookTest extends TestCase {
 					},
 					printFun
 				);
-				AppInvite.invite("https://fb.me/1654475341456363");
+				//AppInvite.invite("https://fb.me/1654475341456363");
+				Share.link("http://www.sempaigames.com/daktylos");
 			},
 			function() {	// Error
 				trace("error");

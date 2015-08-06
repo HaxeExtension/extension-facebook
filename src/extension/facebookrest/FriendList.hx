@@ -6,7 +6,7 @@ typedef ProfilePictureSource = { height : Int, is_silhouette : Bool, url : Strin
 typedef UserInvitableFriendPicture = { data : ProfilePictureSource }
 typedef UserInvitableFriend = { id : String, name : String, picture : UserInvitableFriendPicture }
 
-class FriendsInvite {
+class FriendList {
 	
 	public static function invitableFriends(
 		f : Facebook,

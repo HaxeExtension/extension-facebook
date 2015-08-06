@@ -38,6 +38,12 @@
 			android:value="@string/app_id"
 		/>
 
+		<provider
+			android:authorities="com.facebook.app.FacebookContentProvider::ENV_FACEBOOK_APP_ID::"
+			android:name="com.facebook.FacebookContentProvider"
+			android:exported="true"
+		/>
+
 	</application>
 	
 </manifest>
