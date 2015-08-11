@@ -4,7 +4,6 @@
   "tags": ["openfl", "facebook"],
   "description": "Facebook Graph API client.",
   "releasenote": "",
-  "classPath": "src",
   "dependencies": {
   	"inthebox-macros": ""
   }

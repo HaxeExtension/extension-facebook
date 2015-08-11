@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+
+	<haxelib name="inthebox-macros" />
+
+	<section if="android">
+		<dependency name="facebook-sdk" path="dependencies/android/facebook-sdk" />
+		<android extension="org.haxe.extension.facebook.FacebookExtension" />
+		<template path="template/strings.xml" rename="res/values/strings.xml" />
+		<template path="template/AndroidManifest.xml" rename="AndroidManifest.xml" />
+	</section>
+
+	<section if="ios">
+		<ndll name="extension_facebook" />
+		<dependency path="dependencies/ios/FBSDKCoreKit.framework" />
+		<template path="template/PROJ-Info.plist" rename="${APP_TITLE}-Info.plist" />
+	</section>
+
+</project>

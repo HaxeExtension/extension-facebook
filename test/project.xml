@@ -9,6 +9,7 @@
 	<set name="legacy" />
 
 	<setenv name="FACEBOOK_APP_ID" value="1649878375249393" />
+	<setenv name="FACEBOOK_DISPLAY_NAME" value="Testentario" />
 
 	<haxelib name="openfl" />
 	<haxelib name="extension-facebook-rest" />
