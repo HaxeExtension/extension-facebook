@@ -5,8 +5,8 @@ import openfl.utils.JNI;
 @:build(ShortCuts.mirrors())
 class FacebookExtension {
 
-	@JNI("org.haxe.extension.facebook", "init")
-	public static function init() {}
+	@JNI("org.haxe.extension.facebook", "login")
+	public static function login() {}
 
 	@JNI("org.haxe.extension.facebook", "appInvite")
 	public static function appInvite(appLinkUrl : String, previewImageUrl : String) {}

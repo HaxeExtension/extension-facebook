@@ -13,6 +13,7 @@
 	<section if="ios">
 		<ndll name="extension_facebook" />
 		<dependency path="dependencies/ios/FBSDKCoreKit.framework" />
+		<dependency path="dependencies/ios/FBSDKLoginKit.framework" />
 		<template path="template/PROJ-Info.plist" rename="${APP_TITLE}-Info.plist" />
 	</section>
 

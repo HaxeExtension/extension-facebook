@@ -82,7 +82,7 @@ public class FacebookExtension extends Extension {
 		callbacks = _callbacks;
 	}
 
-	public static void init(){
+	public static void login(){
 		LoginManager.getInstance().logInWithReadPermissions(mainActivity, new ArrayList<String>());
 	}
 	

@@ -9,11 +9,13 @@
 #include <hx/CFFI.h>
 #include <hxcpp.h>
 
-static value extension_facebook_init() {
-	printf("\n asdasdsad init\n");
+#include <facebook.h>
+
+static value extension_facebook_login() {
+	exension_facebook::login();
 	return alloc_null();
 }
-DEFINE_PRIM(extension_facebook_init, 0);
+DEFINE_PRIM(extension_facebook_login, 0);
 
 static value extension_facebook_appInvite(value appLinkUrl, value previewImageUrl) {
 	printf("app Invite\n");

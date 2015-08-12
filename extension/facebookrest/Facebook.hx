@@ -42,11 +42,11 @@ class Facebook extends TaskExecutor {
 			addTask(new CallTask(onFailure));
 		}
 		FacebookCFFI.setCallBackObject(callbacks);
-		FacebookCFFI.init();
+		FacebookCFFI.login();
 
 		#elseif ios
 
-		FacebookCFFI.init();
+		FacebookCFFI.login();
 
 		#else
 

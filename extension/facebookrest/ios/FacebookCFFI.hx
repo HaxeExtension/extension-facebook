@@ -5,7 +5,7 @@ package extension.facebookrest.ios;
 @CPP_PRIMITIVE_PREFIX("extension_facebook")
 class FacebookCFFI {
 
-	@CPP public static function init() {}
+	@CPP public static function login() {}
 	@CPP public static function appInvite(appLinkUrl : String, previewImageUrl : String) {}
 	@CPP public static function shareLink(url : String) {}
 
