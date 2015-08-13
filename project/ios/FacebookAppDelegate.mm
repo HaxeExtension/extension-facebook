@@ -10,10 +10,6 @@
 														annotation:annotation];
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-	NSLog(@"dfkjhsdkf");
-	return YES;
-}
+
 
 @end

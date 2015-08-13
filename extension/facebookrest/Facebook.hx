@@ -46,6 +46,16 @@ class Facebook extends TaskExecutor {
 
 		#elseif ios
 
+		FacebookCFFI.setOnLoginSuccessCallback(function(token : String) {
+			trace("sucess callback: " + token);
+			this.accessToken = token;
+			addTask(new CallTask(onSuccess));
+		});
+
+		FacebookCFFI.setOnLoginErrorCallback(function(error) {
+			addTask(new CallTask(onFailure));
+		});
+
 		FacebookCFFI.login();
 
 		#else
