@@ -1,9 +1,13 @@
+#import <FacebookAppDelegate.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 namespace exension_facebook {
 
 	void login() {
+
+		[UIApplication sharedApplication].delegate = [[FacebookAppDelegate alloc] init];
+
 		FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
 		[login logInWithReadPermissions:@[@"public_profile"] handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
 			if (error) {

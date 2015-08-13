@@ -10,6 +10,7 @@
 		<compilerflag value="-framework"/>
 		<compilerflag value="FBSDKCoreKit"/>
 		<file name="ios/Facebook.mm"/>
+		<file name="ios/FacebookAppDelegate.mm"/>
 	</files>
 
 	<files id="common">
