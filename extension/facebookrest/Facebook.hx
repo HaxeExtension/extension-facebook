@@ -32,6 +32,7 @@ class Facebook extends TaskExecutor {
 	public var accessToken : String;
 
 	public function new() {
+		accessToken = "";
 		if (!initted) {
 			#if (android || ios)
 			FacebookCFFI.init(function(token) {

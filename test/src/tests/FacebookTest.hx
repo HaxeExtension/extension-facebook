@@ -12,6 +12,7 @@ import haxe.unit.TestCase;
 class FacebookTest extends TestCase {
 
 	var spr : Sprite;
+	var face : Facebook;
 
 	function printFun(str : String) {
 		#if mobile
@@ -19,6 +20,20 @@ class FacebookTest extends TestCase {
 		#else
 		Sys.println(str);
 		#end
+	}
+
+	function onLoggedIn() {
+		FriendList.invitableFriends(
+			face,
+			function(friends : Array<UserInvitableFriend>) {
+				for (f in friends) {
+					printFun(f.name);
+				}
+			},
+			printFun
+		);
+		//AppInvite.invite("https://fb.me/1654475341456363");
+		Share.link("http://www.sempaigames.com/daktylos");
 	}
 
 	public function test() {
@@ -31,31 +46,23 @@ class FacebookTest extends TestCase {
 		Lib.current.stage.addChild(spr);
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
-		var face = new Facebook();
-		face.login(
-			PermissionsType.Read,
-			["email", "user_likes"],
-			function() {		// Sucess
-				FriendList.invitableFriends(
-					face,
-					function(friends : Array<UserInvitableFriend>) {
-						for (f in friends) {
-							printFun(f.name);
-						}
-					},
-					printFun
-				);
-				//AppInvite.invite("https://fb.me/1654475341456363");
-				Share.link("http://www.sempaigames.com/daktylos");
-			},
-			function() {		// Cancel
-				trace("Cancel");
-			},
-			function(error) {	// Error
-				trace("error " + error);
-			},
-			"1649878375249393"	// App ID
-		);
+		face = new Facebook();
+		if (face.accessToken!="") {
+			onLoggedIn();
+		} else {
+			face.login(
+				PermissionsType.Read,
+				["email", "user_likes"],
+				onLoggedIn, 		// Sucess
+				function() {		// Cancel
+					trace("Cancel");
+				},
+				function(error) {	// Error
+					trace("error " + error);
+				},
+				"1649878375249393"	// App ID
+			);
+		}
 
 		assertTrue(true);
 

@@ -12,9 +12,10 @@ namespace exension_facebook {
 	void init() {
 		NSLog(@"Call init");
 		[UIApplication sharedApplication].delegate = [[FacebookAppDelegate alloc] init];
-		
+		FacebookObserver *obs = [[FacebookObserver alloc] init];
+		[obs observeTokenChange:nil];
 		[[NSNotificationCenter defaultCenter]
-			addObserver:[[FacebookObserver alloc] init]
+			addObserver:obs
 			selector:@selector(observeTokenChange:)
 			name:FBSDKAccessTokenDidChangeNotification
 			object:nil
@@ -22,7 +23,7 @@ namespace exension_facebook {
 	}
 
 	void logInWithReadPermissions(std::vector<std::string> &permissions) {
-		
+
 		if (login==NULL) {
 			login = [[FBSDKLoginManager alloc] init];
 		}
