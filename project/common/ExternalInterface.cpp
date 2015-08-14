@@ -9,19 +9,30 @@
 #include <hx/CFFI.h>
 #include <hxcpp.h>
 
-#include <facebook.h>
+#include <string>
+#include <vector>
+
+#include <Facebook.h>
 
 #define safe_alloc_string(a) (alloc_string(a!=NULL ? a : ""))
 
+AutoGCRoot* _onTokenChange;
 AutoGCRoot* _onLoginSuccessCallback;
 AutoGCRoot* _onLoginCancelCallback;
 AutoGCRoot* _onLoginErrorCallback;
 
-void exension_facebook::onLoginSuccessCallback(const char *token) {
+void exension_facebook::onTokenChange(const char *token) {
+	if (_onTokenChange==NULL) {
+		return;
+	}
+	val_call1(_onTokenChange->get(), safe_alloc_string(token));
+}
+
+void exension_facebook::onLoginSuccessCallback() {
 	if (_onLoginSuccessCallback==NULL) {
 		return;
 	}
-	val_call1(_onLoginSuccessCallback->get(), safe_alloc_string(token));
+	val_call0(_onLoginSuccessCallback->get());
 }
 
 void exension_facebook::onLoginCancelCallback() {
@@ -38,11 +49,27 @@ void exension_facebook::onLoginErrorCallback(const char *error) {
 	val_call1(_onLoginErrorCallback->get(), safe_alloc_string(error));
 }
 
-static value extension_facebook_login() {
-	exension_facebook::login();
+static value extension_facebook_init(value onTokenChange) {
+	_onTokenChange = new AutoGCRoot(onTokenChange);
+	exension_facebook::init();
 	return alloc_null();
 }
-DEFINE_PRIM(extension_facebook_login, 0);
+DEFINE_PRIM(extension_facebook_init, 1);
+
+static value extension_facebook_logInWithReadPermissions(value permissions) {
+	int n = 0;
+	if (permissions!=NULL) {
+		n = val_array_size(permissions);
+	}
+	std::vector<std::string> stlPermissions;
+	for (int i=0;i<n;++i) {
+		std::string str(val_string(val_array_i(permissions, i)));
+		stlPermissions.push_back(str);
+	}
+	exension_facebook::logInWithReadPermissions(stlPermissions);
+	return alloc_null();
+}
+DEFINE_PRIM(extension_facebook_logInWithReadPermissions, 1);
 
 static value extension_facebook_setOnLoginSuccessCallback(value fun) {
 	_onLoginSuccessCallback = new AutoGCRoot(fun);

@@ -1,32 +1,47 @@
 #import <FacebookAppDelegate.h>
+#import <FacebookObserver.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
-#import <facebook.h>
+#import <Facebook.h>
 
 namespace exension_facebook {
 
-	void login() {
+	FBSDKLoginManager *login;
 
+	void init() {
+		NSLog(@"Call init");
 		[UIApplication sharedApplication].delegate = [[FacebookAppDelegate alloc] init];
+		
+		[[NSNotificationCenter defaultCenter]
+			addObserver:[[FacebookObserver alloc] init]
+			selector:@selector(observeTokenChange:)
+			name:FBSDKAccessTokenDidChangeNotification
+			object:nil
+		];
+	}
 
-		FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
-		[login logInWithReadPermissions:@[@"public_profile"] handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+	void logInWithReadPermissions(std::vector<std::string> &permissions) {
+		
+		if (login==NULL) {
+			login = [[FBSDKLoginManager alloc] init];
+		}
+
+		NSMutableArray *nsPermissions = [[NSMutableArray alloc] init];
+		for (auto p : permissions) {
+			[nsPermissions addObject:[NSString stringWithUTF8String:p.c_str()]];
+		}
+
+		[login logInWithReadPermissions:nsPermissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
 			if (error) {
-				// Process error
-				NSLog(@"Error");
 				onLoginErrorCallback([error.localizedDescription UTF8String]);
 			} else if (result.isCancelled) {
-				// Handle cancellations
-				NSLog(@"Cancel");
 				onLoginCancelCallback();
 			} else {
-				// If you ask for multiple permissions at once, you
-				// should check if specific permissions missing
-				NSLog(@"Ok");
-				onLoginSuccessCallback([result.token.tokenString UTF8String]);
+				onLoginSuccessCallback();
 			}
 		}];
+
 	}
 
 }

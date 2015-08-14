@@ -1,8 +1,14 @@
+#include <string>
+#include <vector>
+
 namespace exension_facebook {
 
-	void login();
+	void init();
+	void logInWithReadPermissions(std::vector<std::string> &permissions);
 
-	void onLoginSuccessCallback(const char *token);
+	void onTokenChange(const char *token);
+
+	void onLoginSuccessCallback();
 	void onLoginCancelCallback();
 	void onLoginErrorCallback(const char *error);
 

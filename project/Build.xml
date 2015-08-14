@@ -9,8 +9,10 @@
 		<compilerflag value="-F${FACEBOOK_SDK_DIR}"/>
 		<compilerflag value="-framework"/>
 		<compilerflag value="FBSDKCoreKit"/>
+		<compilerflag value="-std=c++11" />
 		<file name="ios/Facebook.mm"/>
 		<file name="ios/FacebookAppDelegate.mm"/>
+		<file name="ios/FacebookObserver.mm"/>
 	</files>
 
 	<files id="common">

@@ -20,43 +20,68 @@ import cpp.vm.Thread;
 import neko.vm.Thread;
 #end
 
+@:enum
+abstract PermissionsType(Int) {
+	var Publish = 0;
+	var Read = 1;
+}
+
 class Facebook extends TaskExecutor {
 
+	static var initted = false;
 	public var accessToken : String;
 
 	public function new() {
+		if (!initted) {
+			#if (android || ios)
+			FacebookCFFI.init(function(token) {
+				trace("trace token changed: " + token);
+				this.accessToken = token;
+			});
+			#end
+			initted = true;
+		}
 		super();
 	}
 
-	public function login(onSuccess : Void->Void, onFailure : Void -> Void, appID : String = "") {
+	public function login(
+		type : PermissionsType,
+		permissions : Array<String>,
+		onSuccess : Void->Void,
+		onCancel : Void->Void,
+		onError : String->Void,
+		appID : String = ""
+	) {
+
+		var fOnSuccess = function() {
+			addTask(new CallTask(onSuccess));
+		}
+
+		var fOnCancel = function() {
+			addTask(new CallTask(onCancel));
+		}
+
+		var fOnError = function(error) {
+			addTask(new CallStrTask(onError, error));
+		}
 
 		#if android
 
 		var callbacks = new FacebookCallbacks();
-		callbacks.onLoginSucess = function(token : String) {
-			trace("sucess callback: " + token);
-			this.accessToken = token;
-			addTask(new CallTask(onSuccess));
-		}
-		callbacks.onLoginError = function() {
-			addTask(new CallTask(onFailure));
-		}
+		callbacks.onLoginSucess = fOnSuccess;
+		callbacks.onLoginCancel = fOnCancel;
+		callbacks.onLoginError = fOnError;
 		FacebookCFFI.setCallBackObject(callbacks);
-		FacebookCFFI.login();
+
+		FacebookCFFI.logInWithReadPermissions(permissions);
 
 		#elseif ios
 
-		FacebookCFFI.setOnLoginSuccessCallback(function(token : String) {
-			trace("sucess callback: " + token);
-			this.accessToken = token;
-			addTask(new CallTask(onSuccess));
-		});
+		FacebookCFFI.setOnLoginSuccessCallback(fOnSuccess);
+		FacebookCFFI.setOnLoginCancelCallback(fOnCancel);
+		FacebookCFFI.setOnLoginErrorCallback(fOnError);
 
-		FacebookCFFI.setOnLoginErrorCallback(function(error) {
-			addTask(new CallTask(onFailure));
-		});
-
-		FacebookCFFI.login();
+		FacebookCFFI.logInWithReadPermissions(permissions);
 
 		#else
 
