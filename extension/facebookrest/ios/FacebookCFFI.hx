@@ -6,6 +6,7 @@ package extension.facebookrest.ios;
 class FacebookCFFI {
 
 	@CPP public static function init(onTokenChange : String->Void) {}
+	@CPP public static function logout();
 	@CPP public static function logInWithReadPermissions(permissions : Array<String> = null) {}
 	@CPP public static function appInvite(appLinkUrl : String, previewImageUrl : String) {}
 	@CPP public static function shareLink(url : String) {}

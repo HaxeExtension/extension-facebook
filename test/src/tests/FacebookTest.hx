@@ -7,12 +7,14 @@ import extension.facebookrest.Share;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.Lib;
+import flash.text.TextField;
 import haxe.unit.TestCase;
 
 class FacebookTest extends TestCase {
 
 	var spr : Sprite;
 	var face : Facebook;
+	var tokenTxt : TextField;
 
 	function printFun(str : String) {
 		#if mobile
@@ -23,6 +25,7 @@ class FacebookTest extends TestCase {
 	}
 
 	function onLoggedIn() {
+		tokenTxt.text = face.accessToken;
 		FriendList.invitableFriends(
 			face,
 			function(friends : Array<UserInvitableFriend>) {
@@ -44,6 +47,12 @@ class FacebookTest extends TestCase {
 		gfx.drawRect(0, 0, 200, 200);
 		gfx.endFill();
 		Lib.current.stage.addChild(spr);
+
+		tokenTxt = new TextField();
+		tokenTxt.autoSize = flash.text.TextFieldAutoSize.LEFT;
+		tokenTxt.scaleX = tokenTxt.scaleY = 2.0;
+		Lib.current.stage.addChild(tokenTxt);
+
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 
 		face = new Facebook();

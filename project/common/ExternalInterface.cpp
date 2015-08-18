@@ -56,6 +56,27 @@ static value extension_facebook_init(value onTokenChange) {
 }
 DEFINE_PRIM(extension_facebook_init, 1);
 
+static value extension_facebook_logOut() {
+	exension_facebook::logOut();
+	return alloc_null();
+}
+DEFINE_PRIM(extension_facebook_logOut, 1);
+
+static value extension_facebook_logInWithPublishPermissions(value permissions) {
+	int n = 0;
+	if (permissions!=NULL) {
+		n = val_array_size(permissions);
+	}
+	std::vector<std::string> stlPermissions;
+	for (int i=0;i<n;++i) {
+		std::string str(val_string(val_array_i(permissions, i)));
+		stlPermissions.push_back(str);
+	}
+	exension_facebook::logInWithPublishPermissions(stlPermissions);
+	return alloc_null();
+}
+DEFINE_PRIM(extension_facebook_logInWithPublishPermissions, 1);
+
 static value extension_facebook_logInWithReadPermissions(value permissions) {
 	int n = 0;
 	if (permissions!=NULL) {
@@ -106,4 +127,6 @@ extern "C" void extension_facebook_main () {
 }
 DEFINE_ENTRY_POINT (extension_facebook_main);
 
-extern "C" int extension_facebook_register_prims () { return 0; }
+extern "C" int extension_facebook_register_prims () {
+	return 0;
+}
