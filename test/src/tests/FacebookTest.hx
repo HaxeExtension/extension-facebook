@@ -36,7 +36,12 @@ class FacebookTest extends TestCase {
 			printFun
 		);
 		//AppInvite.invite("https://fb.me/1654475341456363");
-		Share.link("http://www.sempaigames.com/daktylos");
+		Share.link(
+			"http://www.sempaigames.com/daktylos",
+			"El Daktylooos",
+			"http://www.sempaigames.com/images/daktylos/daktylos-poster-2.jpg",
+			"Juega al Daktylos, un divertido juego prehistorico =)"
+		);
 	}
 
 	public function test() {

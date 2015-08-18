@@ -1,15 +1,22 @@
 package extension.facebookrest;
 
 #if android
-import extension.facebookrest.android.FacebookExtension;
+import extension.facebookrest.android.FacebookCFFI;
+#elseif ios
+import extension.facebookrest.ios.FacebookCFFI;
 #end
 
 class Share {
 
-	public static function link(url : String) {
-		#if android
-		FacebookExtension.shareLink(url);
+	public static function link(contentURL : String,
+		contentTitle : String = "",
+		imageURL : String = "",
+		contentDescription : String = "") {
+
+		#if (android || ios)
+		FacebookCFFI.shareLink(contentURL, contentTitle, imageURL, contentDescription);
 		#end
+
 	}
-	
+
 }
