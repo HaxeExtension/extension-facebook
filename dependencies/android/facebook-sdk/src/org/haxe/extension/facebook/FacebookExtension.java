@@ -14,6 +14,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.ShareLinkContent.Builder;
 import com.facebook.share.widget.AppInviteDialog;
 import com.facebook.share.widget.ShareDialog;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class FacebookExtension extends Extension {
 	static ShareDialog shareDialog;
 
 	public FacebookExtension() {
-		
+
 		FacebookSdk.sdkInitialize(mainContext);
 		callbackManager = CallbackManager.Factory.create();
 		shareDialog = new ShareDialog(mainActivity);
@@ -66,7 +67,7 @@ public class FacebookExtension extends Extension {
 	public static void init(HaxeObject _callbacks) {
 
 		callbacks = _callbacks;
-		
+
 		accessTokenTracker = new AccessTokenTracker() {
 			@Override
 			protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
@@ -81,6 +82,10 @@ public class FacebookExtension extends Extension {
 			callbacks.call1("_onTokenChange", token.getToken());
 		}
 
+	}
+
+	public static void logout() {
+		LoginManager.getInstance().logOut();
 	}
 
 	public static void logInWithPublishPermissions(String permissions) {
@@ -104,14 +109,21 @@ public class FacebookExtension extends Extension {
 	}
 
 	public static void shareLink(String contentURL, String contentTitle, String imageURL, String contentDescription) {
-		/*
-		ShareLinkContent content = new ShareLinkContent.Builder()
-			.setContentUrl(Uri.parse(url))
-			.build();
+		Builder builder = new ShareLinkContent.Builder();
+		builder.setContentUrl(Uri.parse(contentURL));
+		if (contentTitle!="") {
+			builder.setContentTitle(contentTitle);
+		}
+		if (imageURL!="") {
+			builder.setImageUrl(Uri.parse(imageURL));
+		}
+		if (contentDescription!="") {
+			builder.setContentDescription(contentDescription);
+		}
+		ShareLinkContent content = builder.build();
 		if (shareDialog!=null) {
 			shareDialog.show(content);
 		}
-		*/
 	}
 
 	// !Static methods interface
