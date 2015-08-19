@@ -17,16 +17,21 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.AppInviteDialog;
 import com.facebook.share.widget.ShareDialog;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.haxe.extension.Extension;
 import org.haxe.lime.HaxeObject;
 
 public class FacebookExtension extends Extension {
 
-	AccessTokenTracker accessTokenTracker;
 	CallbackManager callbackManager;
+
+	static HaxeObject callbacks;
+	static AccessTokenTracker accessTokenTracker;
 	static ShareDialog shareDialog;
 
 	public FacebookExtension() {
+		
 		FacebookSdk.sdkInitialize(mainContext);
 		callbackManager = CallbackManager.Factory.create();
 		shareDialog = new ShareDialog(mainActivity);
@@ -34,15 +39,13 @@ public class FacebookExtension extends Extension {
 			new FacebookCallback<LoginResult>() {
 				@Override
 				public void onSuccess(LoginResult loginResult) {
-					Log.d("Facebook", "onSucess");
 					if (callbacks!=null) {
-						callbacks.call1("_onLoginSucess", loginResult.getAccessToken().getToken());
+						callbacks.call0("_onLoginSucess");
 					}
 				}
 
 				@Override
 				public void onCancel() {
-					Log.d("Facebook", "onCancel");
 					if (callbacks!=null) {
 						callbacks.call0("_onLoginCancel");
 					}
@@ -50,42 +53,46 @@ public class FacebookExtension extends Extension {
 
 				@Override
 				public void onError(FacebookException exception) {
-					Log.d("Facebook", "onError");
 					if (callbacks!=null) {
-						callbacks.call0("_onLoginError");
+						callbacks.call1("_onLoginError", exception.toString());
 					}
 				}
 		});
-		
-		accessTokenTracker = new AccessTokenTracker() {
-			@Override
-			protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-				Log.d("Facebook", "Got token: " + currentAccessToken.getToken());
-				if (callbacks!=null) {
-					callbacks.call1("_onLoginSucess", currentAccessToken.getToken());
-				}
-			}
-		};
-		
-		AccessToken token = AccessToken.getCurrentAccessToken();
-		if (token!=null) {
-			Log.d("Facebook", "Token es: " + token.getToken());
-		}
-		
+
 	}
 
 	// Static methods interface
 
-	static HaxeObject callbacks;
+	public static void init(HaxeObject _callbacks) {
 
-	public static void setCallBackObject(HaxeObject _callbacks) {
 		callbacks = _callbacks;
+		
+		accessTokenTracker = new AccessTokenTracker() {
+			@Override
+			protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+				if (callbacks!=null) {
+					callbacks.call1("_onTokenChange", currentAccessToken.getToken());
+				}
+			}
+		};
+
+		AccessToken token = AccessToken.getCurrentAccessToken();
+		if (token!=null) {
+			callbacks.call1("_onTokenChange", token.getToken());
+		}
+
 	}
 
-	public static void login(){
-		LoginManager.getInstance().logInWithReadPermissions(mainActivity, new ArrayList<String>());
+	public static void logInWithPublishPermissions(String permissions) {
+		String[] arr = permissions.split(";");
+		LoginManager.getInstance().logInWithPublishPermissions(mainActivity, Arrays.asList(arr));
 	}
-	
+
+	public static void logInWithReadPermissions(String permissions) {
+		String[] arr = permissions.split(";");
+		LoginManager.getInstance().logInWithReadPermissions(mainActivity, Arrays.asList(arr));
+	}
+
 	public static void appInvite(String applinkUrl, String previewImageUrl) {
 		if (AppInviteDialog.canShow()) {
 			AppInviteContent content = new AppInviteContent.Builder()
@@ -96,13 +103,15 @@ public class FacebookExtension extends Extension {
 		}
 	}
 
-	public static void shareLink(String url) {
+	public static void shareLink(String contentURL, String contentTitle, String imageURL, String contentDescription) {
+		/*
 		ShareLinkContent content = new ShareLinkContent.Builder()
 			.setContentUrl(Uri.parse(url))
 			.build();
 		if (shareDialog!=null) {
 			shareDialog.show(content);
 		}
+		*/
 	}
 
 	// !Static methods interface
@@ -115,7 +124,7 @@ public class FacebookExtension extends Extension {
 		callbackManager.onActivityResult(requestCode, resultCode, data);
 		return true;
 	}
-	
+
 	@Override public void onDestroy() {
 		accessTokenTracker.stopTracking();
 	}

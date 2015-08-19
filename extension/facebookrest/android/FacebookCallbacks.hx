@@ -8,28 +8,32 @@ class FacebookCallbacks extends TaskExecutor {
 		super();
 	}
 
-	public var onLoginSucess : String->Void;
+	public var onTokenChange : String->Void;
+	public var onLoginSucess : Void->Void;
 	public var onLoginCancel : Void->Void;
-	public var onLoginError : Void->Void;
+	public var onLoginError : String->Void;
 
-	function _onLoginSucess(token : String) {
-		trace("sucess: " + token + ", function: " + onLoginSucess);
+	function _onTokenChange(token : String) {
+		if (onTokenChange!=null) {
+			onTokenChange(token);
+		}
+	}
+
+	function _onLoginSucess() {
 		if (onLoginSucess!=null) {
-			addTask(new CallStrTask(onLoginSucess, token));
+			addTask(new CallTask(onLoginSucess));
 		}
 	}
 
 	function _onLoginCancel() {
-		trace("cancel");
 		if (onLoginCancel!=null) {
-			onLoginCancel();
+			addTask(new CallTask(onLoginCancel));
 		}
 	}
 
-	function _onLoginError() {
-		trace("error");
+	function _onLoginError(str : String) {
 		if (onLoginError!=null) {
-			onLoginError();
+			addTask(new CallStrTask(onLoginError, str));
 		}
 	}
 

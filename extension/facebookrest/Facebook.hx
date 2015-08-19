@@ -1,3 +1,4 @@
+
 package extension.facebookrest;
 
 #if android
@@ -66,17 +67,7 @@ class Facebook extends TaskExecutor {
 			addTask(new CallStrTask(onError, error));
 		}
 
-		#if android
-
-		var callbacks = new FacebookCallbacks();
-		callbacks.onLoginSucess = fOnSuccess;
-		callbacks.onLoginCancel = fOnCancel;
-		callbacks.onLoginError = fOnError;
-		FacebookCFFI.setCallBackObject(callbacks);
-
-		FacebookCFFI.logInWithReadPermissions(permissions);
-
-		#elseif ios
+		#if (android || ios)
 
 		FacebookCFFI.setOnLoginSuccessCallback(fOnSuccess);
 		FacebookCFFI.setOnLoginCancelCallback(fOnCancel);
