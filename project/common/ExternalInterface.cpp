@@ -111,7 +111,10 @@ static value extension_facebook_setOnLoginErrorCallback(value fun) {
 DEFINE_PRIM(extension_facebook_setOnLoginErrorCallback, 1);
 
 static value extension_facebook_appInvite(value appLinkUrl, value previewImageUrl) {
-	printf("app Invite\n");
+	extension_facebook::appInvite(
+		appLinkUrl==NULL ? "" : std::string(val_string(appLinkUrl)),
+		previewImageUrl==NULL ? "" : std::string(val_string(previewImageUrl))
+	);
 	return alloc_null();
 }
 DEFINE_PRIM(extension_facebook_appInvite, 2);

@@ -9,6 +9,8 @@ namespace extension_facebook {
 	void logInWithPublishPermissions(std::vector<std::string> &permissions);
 	void logInWithReadPermissions(std::vector<std::string> &permissions);
 
+	void appInvite(std::string appLinkUrl, std::string previewImageUrl);
+
 	void shareLink(
 		std::string contentURL,
 		std::string contentTitle,

@@ -2,6 +2,8 @@
 #import <FacebookObserver.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import <FBSDKShareKit/FBSDKAppInviteContent.h>
+#import <FBSDKShareKit/FBSDKAppInviteDialog.h>
 #import <FBSDKShareKit/FBSDKShareDialog.h>
 #import <FBSDKShareKit/FBSDKShareLinkContent.h>
 
@@ -65,6 +67,20 @@ namespace extension_facebook {
 				onLoginSuccessCallback();
 			}
 		}];
+	}
+
+	void appInvite(std::string appLinkUrl, std::string previewImageUrl) {
+
+		FBSDKAppInviteContent *content =[[FBSDKAppInviteContent alloc] init];
+		content.appLinkURL = [NSURL URLWithString:[NSString stringWithUTF8String:appLinkUrl.c_str()]];
+		if (previewImageUrl!="") {
+			content.appInvitePreviewImageURL = [NSURL URLWithString:[NSString stringWithUTF8String:previewImageUrl.c_str()]];
+		}
+
+		FBSDKAppInviteDialog *dialog = [[FBSDKAppInviteDialog alloc] init];
+		dialog.content = content;
+		[dialog show];
+
 	}
 
 	void shareLink(
