@@ -77,8 +77,7 @@ class FacebookTest extends TestCase {
 				},
 				function(error) {	// Error
 					trace("error " + error);
-				},
-				"1649878375249393"	// App ID
+				}
 			);
 		}
 

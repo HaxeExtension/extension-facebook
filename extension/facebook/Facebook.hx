@@ -12,6 +12,7 @@ import extension.util.task.*;
 import flash.Lib;
 import flash.net.URLRequest;
 import haxe.Json;
+import haxe.Sys;
 import sys.net.Host;
 import sys.net.Socket;
 
@@ -37,7 +38,6 @@ class Facebook extends TaskExecutor {
 		if (!initted) {
 			#if (android || ios)
 			FacebookCFFI.init(function(token) {
-				trace("trace token changed: " + token);
 				this.accessToken = token;
 			});
 			#end
@@ -51,8 +51,7 @@ class Facebook extends TaskExecutor {
 		permissions : Array<String>,
 		onSuccess : Void->Void,
 		onCancel : Void->Void,
-		onError : String->Void,
-		appID : String = ""
+		onError : String->Void
 	) {
 
 		var fOnSuccess = function() {
@@ -77,6 +76,7 @@ class Facebook extends TaskExecutor {
 
 		#else
 
+		var appID = Sys.getEnv("FACEBOOK_APP_ID");
 		var redirectUri = "http://vmoura.dojo/ws_face_prueba";
 		var url = 'https://www.facebook.com/dialog/oauth?client_id=$appID&redirect_uri=$redirectUri';
 
