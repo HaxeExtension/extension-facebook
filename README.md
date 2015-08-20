@@ -1,7 +1,7 @@
 # extension-facebook
 Haxe OpenFL extension for Facebook, supports Facebook SDK for Android and iOS. On other platforms uses Facebook REST API and logins using a Webview.
 
-# Usage example
+##Usage example
 
 Login the user to Facebook if needed:
 ```Haxe
@@ -43,3 +43,11 @@ facebook.get(
   onError     // Dynamic->Void
 );
 ```
+
+##License
+
+The MIT License (MIT) - [LICENSE.md](LICENSE.md)
+
+Copyright &copy; 2012 SempaiGames (http://www.sempaigames.com)
+
+Author: Daniel Uranga
