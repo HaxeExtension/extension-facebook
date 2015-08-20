@@ -1,4 +1,4 @@
-package extension.facebookrest.ios;
+package extension.facebook.ios;
 
 @:build(ShortCuts.mirrors())
 @CPP_DEFAULT_LIBRARY("extension_facebook")

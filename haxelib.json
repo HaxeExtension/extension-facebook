@@ -1,5 +1,5 @@
 {
-  "name": "extension-facebook-rest",
+  "name": "extension-facebook",
   
   "tags": ["openfl", "facebook"],
   "description": "Facebook Graph API client.",

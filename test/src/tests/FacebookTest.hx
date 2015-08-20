@@ -1,9 +1,10 @@
 package tests;
 
-import extension.facebookrest.AppInvite;
-import extension.facebookrest.Facebook;
-import extension.facebookrest.FriendList;
-import extension.facebookrest.Share;
+import extension.facebook.AppInvite;
+import extension.facebook.Facebook;
+import extension.facebook.FriendList;
+import extension.facebook.Permissions;
+import extension.facebook.Share;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.Lib;
@@ -35,13 +36,16 @@ class FacebookTest extends TestCase {
 			},
 			printFun
 		);
-		//AppInvite.invite("https://fb.me/1654475341456363");
+		AppInvite.invite("https://fb.me/1654475341456363");
+		Permissions.currentPermissions(face, function(a) trace(a), function(e) trace(e));
+		/*
 		Share.link(
 			"http://www.sempaigames.com/daktylos",
 			"El Daktylooos",
 			"http://www.sempaigames.com/images/daktylos/daktylos-poster-2.jpg",
 			"Juega al Daktylos, un divertido juego prehistorico =)"
 		);
+*/
 	}
 
 	public function test() {

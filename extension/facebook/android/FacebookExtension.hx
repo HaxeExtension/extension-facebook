@@ -1,4 +1,4 @@
-package extension.facebookrest.android;
+package extension.facebook.android;
 
 import openfl.utils.JNI;
 

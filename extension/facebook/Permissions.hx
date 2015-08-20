@@ -1,4 +1,4 @@
-package extension.facebookrest;
+package extension.facebook;
 
 import haxe.Json;
 

@@ -1,11 +1,11 @@
 
-package extension.facebookrest;
+package extension.facebook;
 
 #if android
-import extension.facebookrest.android.FacebookCallbacks;
-import extension.facebookrest.android.FacebookCFFI;
+import extension.facebook.android.FacebookCallbacks;
+import extension.facebook.android.FacebookCFFI;
 #elseif ios
-import extension.facebookrest.ios.FacebookCFFI;
+import extension.facebook.ios.FacebookCFFI;
 #end
 
 import extension.util.task.*;

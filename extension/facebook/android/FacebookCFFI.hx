@@ -1,3 +1,3 @@
-package extension.facebookrest.android;
+package extension.facebook.android;
 
 typedef FacebookCFFI = FacebookExtension;

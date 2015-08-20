@@ -1,4 +1,4 @@
-package extension.facebookrest.rest_client.non_openfl;
+package extension.facebook.rest_client.non_openfl;
 
 import haxe.Http;
 import haxe.io.BytesOutput;

@@ -1,4 +1,4 @@
-package extension.facebookrest.rest_client.openfl;
+package extension.facebook.rest_client.openfl;
 
 import flash.events.Event;
 import flash.events.HTTPStatusEvent;

@@ -12,6 +12,6 @@
 	<setenv name="FACEBOOK_DISPLAY_NAME" value="Testentario" />
 
 	<haxelib name="openfl" />
-	<haxelib name="extension-facebook-rest" />
+	<haxelib name="extension-facebook" />
 	
 </project>
