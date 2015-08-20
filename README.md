@@ -35,7 +35,7 @@ Share.link(
 );
 ```
 
-Grap API:
+Graph API:
 ```Haxe
 facebook.get(
   "/me/permissions",  // Graph API endpoint
