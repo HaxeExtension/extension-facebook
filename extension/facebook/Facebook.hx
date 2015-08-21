@@ -12,7 +12,6 @@ import extension.util.task.*;
 import flash.Lib;
 import flash.net.URLRequest;
 import haxe.Json;
-import haxe.Sys;
 import sys.net.Host;
 import sys.net.Socket;
 
@@ -130,8 +129,13 @@ class Facebook extends TaskExecutor {
 		onError : Dynamic->Void = null
 	) : Void {
 
+		if (parameters==null) {
+			parameters = new Map<String, String>();
+		}
+		parameters.set("access_token", accessToken);
+
 		RestClient.getAsync(
-			"https://graph.facebook.com/v2.4"+resource+"?"+"access_token="+accessToken,
+			"https://graph.facebook.com/v2.4"+resource,
 			function(x) onSuccess(Json.parse(x)),
 			parameters,
 			function(x) onError(Json.parse(x))
@@ -146,8 +150,13 @@ class Facebook extends TaskExecutor {
 		onError : Dynamic->Void = null
 	) : Void {
 
+		if (parameters==null) {
+			parameters = new Map<String, String>();
+		}
+		parameters.set("access_token", accessToken);
+
 		RestClient.postAsync(
-			"https://graph.facebook.com/v2.4"+resource+"?"+"access_token="+accessToken,
+			"https://graph.facebook.com/v2.4"+resource,
 			function(x) onSuccess(Json.parse(x)),
 			parameters,
 			function(x) onError(Json.parse(x))
