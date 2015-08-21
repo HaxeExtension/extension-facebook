@@ -10,4 +10,12 @@
 									annotation:annotation];
 }
 
+- (void)appInviteDialog: (FBSDKAppInviteDialog *)appInviteDialog didCompleteWithResults: (NSDictionary *)results {
+	NSLog(@"%@", results);
+}
+
+- (void)appInviteDialog:(FBSDKAppInviteDialog *)appInviteDialog didFailWithError:(NSError *)error {
+	NSLog(@"%@", error);
+}
+
 @end

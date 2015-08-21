@@ -12,9 +12,11 @@
 namespace extension_facebook {
 
 	FBSDKLoginManager *login;
+	FacebookAppDelegate *delegate;
 
 	void init() {
-		[UIApplication sharedApplication].delegate = [[FacebookAppDelegate alloc] init];
+		delegate = [[FacebookAppDelegate alloc] init];
+		[UIApplication sharedApplication].delegate = delegate;
 		FacebookObserver *obs = [[FacebookObserver alloc] init];
 		[[FBSDKApplicationDelegate sharedInstance] application:[UIApplication sharedApplication]
 									didFinishLaunchingWithOptions:[[NSMutableDictionary alloc] init]];
@@ -79,6 +81,7 @@ namespace extension_facebook {
 
 		FBSDKAppInviteDialog *dialog = [[FBSDKAppInviteDialog alloc] init];
 		dialog.content = content;
+		dialog.delegate = delegate;
 		[dialog show];
 
 	}
