@@ -11,18 +11,29 @@ class FriendList {
 	public static function invitableFriends(
 		f : Facebook,
 		onSuccess : Array<UserInvitableFriend>->Void,
-		onError : Dynamic->Void
+		onError : Dynamic->Void,
+		withFriends : Array<UserInvitableFriend> = null,
+		after : String = null
 	) : Void {
-		
+		if (withFriends==null) {
+			withFriends = [];
+		}
 		f.get(
 			"/me/invitable_friends",
 			function(data) {
-				onSuccess(data.data);
+				for (f in cast(data.data, Array<Dynamic>)) {
+					withFriends.push(f);
+				}
+				if (data.paging!=null && data.paging.cursors!=null && data.paging.cursors.after!=null) {
+					invitableFriends(f, onSuccess, onError, withFriends, data.paging.cursors.after);
+				} else {
+					onSuccess(withFriends);
+				}
 			},
-			null,
+			after==null ? null : [ "after" => after ],
 			onError
 		);
- 
+
 	}
 
 }
