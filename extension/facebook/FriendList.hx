@@ -11,29 +11,32 @@ class FriendList {
 	public static function invitableFriends(
 		f : Facebook,
 		onSuccess : Array<UserInvitableFriend>->Void,
-		onError : Dynamic->Void,
-		withFriends : Array<UserInvitableFriend> = null,
-		after : String = null
+		onError : Dynamic->Void
 	) : Void {
-		if (withFriends==null) {
-			withFriends = [];
-		}
-		f.get(
+		f.getAll(
 			"/me/invitable_friends",
-			function(data) {
-				for (f in cast(data.data, Array<Dynamic>)) {
-					withFriends.push(f);
-				}
-				if (data.paging!=null && data.paging.cursors!=null && data.paging.cursors.after!=null) {
-					invitableFriends(f, onSuccess, onError, withFriends, data.paging.cursors.after);
-				} else {
-					onSuccess(withFriends);
-				}
-			},
-			after==null ? null : [ "after" => after ],
+			onSuccess,
 			onError
 		);
+	}
 
+	public static function friendsWhoHaveInstalled(
+		f : Facebook,
+		onSuccess : Array<String>->Void,
+		onError : Dynamic->Void
+	) : Void {
+		f.getAll(
+			"/me/friends",
+			function(data) {
+				var arr = [];
+				for (it in data) {
+					arr.push(it.id);
+				}
+				onSuccess(arr);
+			},
+			["fields"=>"installed"],
+			onError
+		);
 	}
 
 }
