@@ -143,6 +143,37 @@ class Facebook extends TaskExecutor {
 
 	}
 
+	// get the full list of some resource (manages paging)
+	public function getAll<T>(
+		resource : String,
+		onSuccess : Array<T>->Void,
+		parameters : Map<String, String> = null,
+		onError : Dynamic->Void = null,
+		acum : Array<T> = null,
+		after : String = null) {
+
+		if (acum==null) {
+			acum = [];
+		}
+
+		get(
+			resource,
+			function(data) {
+				for (it in cast(data.data, Array<Dynamic>)) {
+					acum.push(it);
+				}
+				if (data.paging!=null && data.paging.cursors!=null && data.paging.cursors.after!=null) {
+					getAll(resource, onSuccess, onError, acum, data.paging.cursors.after);
+				} else {
+					onSuccess(acum);
+				}
+			},
+			after==null ? null : [ "after" => after ],
+			onError
+		);
+
+	}
+
 	public function post(
 		resource : String,
 		onSuccess : Dynamic->Void = null,
