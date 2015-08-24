@@ -22,5 +22,7 @@ class FacebookCFFI {
 	@CPP public static function setOnLoginSuccessCallback(f : Void->Void);
 	@CPP public static function setOnLoginCancelCallback(f : Void->Void);
 	@CPP public static function setOnLoginErrorCallback(f : String->Void);
+	@CPP public static function setOnAppInviteComplete(f : String->Void);	// passes a JSON object to f
+	@CPP public static function setOnAppInviteFail(f : String->Void);
 
 }

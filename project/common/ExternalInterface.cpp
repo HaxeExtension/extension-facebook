@@ -15,38 +15,38 @@
 #include <Facebook.h>
 
 #define safe_alloc_string(a) (alloc_string(a!=NULL ? a : ""))
+#define safe_val_call0(func) if (func!=NULL) val_call0(func->get())
+#define safe_val_call1(func, arg1) if (func!=NULL) val_call1(func->get(), arg1)
 
 AutoGCRoot* _onTokenChange;
 AutoGCRoot* _onLoginSuccessCallback;
 AutoGCRoot* _onLoginCancelCallback;
 AutoGCRoot* _onLoginErrorCallback;
+AutoGCRoot* _onAppInviteComplete;
+AutoGCRoot* _onAppInviteFail;
 
 void extension_facebook::onTokenChange(const char *token) {
-	if (_onTokenChange==NULL) {
-		return;
-	}
-	val_call1(_onTokenChange->get(), safe_alloc_string(token));
+	safe_val_call1(_onTokenChange, safe_alloc_string(token));
 }
 
 void extension_facebook::onLoginSuccessCallback() {
-	if (_onLoginSuccessCallback==NULL) {
-		return;
-	}
-	val_call0(_onLoginSuccessCallback->get());
+	safe_val_call0(_onLoginSuccessCallback);
 }
 
 void extension_facebook::onLoginCancelCallback() {
-	if (_onLoginCancelCallback==NULL) {
-		return;
-	}
-	val_call0(_onLoginCancelCallback->get());
+	safe_val_call0(_onLoginCancelCallback);
 }
 
 void extension_facebook::onLoginErrorCallback(const char *error) {
-	if (_onLoginErrorCallback==NULL) {
-		return;
-	}
-	val_call1(_onLoginErrorCallback->get(), safe_alloc_string(error));
+	safe_val_call1(_onLoginErrorCallback, safe_alloc_string(error));
+}
+
+void extension_facebook::onAppInviteComplete(const char *json) {
+	safe_val_call1(_onAppInviteComplete, safe_alloc_string(json));
+}
+
+void extension_facebook::onAppInviteFail(const char *error) {
+	safe_val_call1(_onAppInviteFail, safe_alloc_string(error));
 }
 
 static value extension_facebook_init(value onTokenChange) {
@@ -109,6 +109,18 @@ static value extension_facebook_setOnLoginErrorCallback(value fun) {
 	return alloc_null();
 }
 DEFINE_PRIM(extension_facebook_setOnLoginErrorCallback, 1);
+
+static value extension_facebook_setOnAppInviteComplete(value fun) {
+	_onAppInviteComplete = new AutoGCRoot(fun);
+	return alloc_null();
+}
+DEFINE_PRIM(extension_facebook_setOnAppInviteComplete, 1);
+
+static value extension_facebook_setOnAppInviteFail(value fun) {
+	_onAppInviteFail = new AutoGCRoot(fun);
+	return alloc_null();
+}
+DEFINE_PRIM(extension_facebook_setOnAppInviteFail, 1);
 
 static value extension_facebook_appInvite(value appLinkUrl, value previewImageUrl) {
 	extension_facebook::appInvite(

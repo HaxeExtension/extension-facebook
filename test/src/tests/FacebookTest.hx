@@ -36,6 +36,8 @@ class FacebookTest extends TestCase {
 			},
 			printFun
 		);
+		AppInvite.setOnCompleteCallback(printFun);
+		AppInvite.setOnFailCallback(printFun);
 		AppInvite.invite("https://fb.me/1654475341456363");
 		Permissions.currentPermissions(face, function(a) trace(a), function(e) trace(e));
 		/*
@@ -45,7 +47,8 @@ class FacebookTest extends TestCase {
 			"http://www.sempaigames.com/images/daktylos/daktylos-poster-2.jpg",
 			"Juega al Daktylos, un divertido juego prehistorico =)"
 		);
-*/
+		*/
+
 	}
 
 	public function test() {

@@ -1,6 +1,9 @@
 #include <string>
 #include <vector>
 
+#ifndef _FACEBOOK_H_
+#define _FACEBOOK_H_ 
+
 namespace extension_facebook {
 
 	void init();
@@ -21,5 +24,9 @@ namespace extension_facebook {
 	void onLoginSuccessCallback();
 	void onLoginCancelCallback();
 	void onLoginErrorCallback(const char *error);
+	void onAppInviteComplete(const char *json);
+	void onAppInviteFail(const char *error);
 
 }
+
+#endif
