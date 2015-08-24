@@ -51,31 +51,25 @@
 	::if (IOS_APP_ORIENTATION != null)::
 	<key>UISupportedInterfaceOrientations</key>
 	::IOS_APP_ORIENTATION::::end::
-	
+
 	<key>NSAppTransportSecurity</key>
-	<dict>
+		<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>facebook.com</key>
 			<dict>
-				<key>NSIncludesSubdomains</key>
-				<true/>                
-				<key>NSExceptionRequiresForwardSecrecy</key>
-				<false/>
+				<key>NSIncludesSubdomains</key> <true/>
+				<key>NSExceptionRequiresForwardSecrecy</key> <false/>
 			</dict>
 			<key>fbcdn.net</key>
 			<dict>
-				<key>NSIncludesSubdomains</key>
-				<true/>
-				<key>NSExceptionRequiresForwardSecrecy</key>
-				<false/>
+				<key>NSIncludesSubdomains</key> <true/>
+				<key>NSExceptionRequiresForwardSecrecy</key>  <false/>
 			</dict>
 			<key>akamaihd.net</key>
 			<dict>
-				<key>NSIncludesSubdomains</key>
-				<true/>
-				<key>NSExceptionRequiresForwardSecrecy</key>
-				<false/>
+				<key>NSIncludesSubdomains</key> <true/>
+				<key>NSExceptionRequiresForwardSecrecy</key> <false/>
 			</dict>
 		</dict>
 	</dict>
