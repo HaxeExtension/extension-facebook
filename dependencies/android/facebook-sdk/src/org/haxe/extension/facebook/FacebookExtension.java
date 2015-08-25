@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Log;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -13,20 +14,25 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.share.model.AppInviteContent;
-import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.ShareLinkContent.Builder;
+import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.AppInviteDialog;
 import com.facebook.share.widget.ShareDialog;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import org.haxe.extension.Extension;
 import org.haxe.lime.HaxeObject;
 
 public class FacebookExtension extends Extension {
 
-	CallbackManager callbackManager;
-
+	static CallbackManager callbackManager;
 	static HaxeObject callbacks;
 	static AccessTokenTracker accessTokenTracker;
 	static ShareDialog shareDialog;
@@ -34,8 +40,11 @@ public class FacebookExtension extends Extension {
 	public FacebookExtension() {
 
 		FacebookSdk.sdkInitialize(mainContext);
-		callbackManager = CallbackManager.Factory.create();
 		shareDialog = new ShareDialog(mainActivity);
+		if (callbackManager!=null) {
+			return;
+		}
+		callbackManager = CallbackManager.Factory.create();
 		LoginManager.getInstance().registerCallback(callbackManager,
 			new FacebookCallback<LoginResult>() {
 				@Override
@@ -60,6 +69,49 @@ public class FacebookExtension extends Extension {
 				}
 		});
 
+	}
+
+	public static Object wrap(Object o) {
+		if (o == null) {
+			return null;
+		}
+		if (o instanceof JSONArray || o instanceof JSONObject) {
+			return o;
+		}
+		if (o.equals(null)) {
+			return o;
+		}
+		try {
+			if (o instanceof Collection) {
+				return new JSONArray((Collection) o);
+			} else if (o.getClass().isArray()) {
+				//return new JSONArray(o);
+				JSONArray arr = new JSONArray();
+				for (Object e : (Object[]) o) {
+					arr.put(e);
+				}
+				return arr;
+			}
+			if (o instanceof Map) {
+				return new JSONObject((Map) o);
+			}
+			if (o instanceof Boolean ||
+				o instanceof Byte ||
+				o instanceof Character ||
+				o instanceof Double ||
+				o instanceof Float ||
+				o instanceof Integer ||
+				o instanceof Long ||
+				o instanceof Short ||
+				o instanceof String) {
+				return o;
+			}
+			if (o.getClass().getPackage().getName().startsWith("java.")) {
+				return o.toString();
+			}
+		} catch (Exception ignored) {
+		}
+		return null;
 	}
 
 	// Static methods interface
@@ -104,7 +156,40 @@ public class FacebookExtension extends Extension {
 					.setApplinkUrl(applinkUrl)
 					.setPreviewImageUrl(previewImageUrl)
 					.build();
-			AppInviteDialog.show(mainActivity, content);
+			AppInviteDialog appInviteDialog = new AppInviteDialog(mainActivity);
+			appInviteDialog.registerCallback(callbackManager, new FacebookCallback<AppInviteDialog.Result>() {
+				@Override
+				public void onSuccess(AppInviteDialog.Result result) {
+					if (callbacks!=null) {
+						Bundle bundle = result.getData();
+						JSONObject json = new JSONObject();
+						Set<String> keys = bundle.keySet();
+						for (String key : keys) {
+							try {
+								json.put(key, wrap(bundle.get(key)));
+							} catch(JSONException e) {
+								Log.d("JSONException", e.toString());
+							}
+						}
+						callbacks.call1("_onAppInviteComplete", json.toString());
+					}
+				}
+
+				@Override
+				public void onCancel() {
+					if (callbacks!=null) {
+						callbacks.call1("_onAppInviteFail", "User canceled");
+					}
+				}
+
+				@Override
+				public void onError(FacebookException e) {
+					if (callbacks!=null) {
+						callbacks.call1("_onAppInviteFail", e.toString());
+					}
+				}
+			});
+			appInviteDialog.show(content);
 		}
 	}
 

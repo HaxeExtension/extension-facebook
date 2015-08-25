@@ -10,7 +10,7 @@ class FacebookCFFI {
 	@CPP public static function logInWithPublishPermissions(permissions : Array<String> = null) {}
 	@CPP public static function logInWithReadPermissions(permissions : Array<String> = null) {}
 	
-	@CPP public static function appInvite(appLinkUrl : String, previewImageUrl : String) {}
+	@CPP public static function appInvite(appLinkUrl : String, previewImageUrl : String = null) {}
 	
 	@CPP public static function shareLink(
 		contentURL : String,

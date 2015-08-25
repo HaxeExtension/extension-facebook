@@ -30,6 +30,14 @@ class FacebookExtension {
 		callbacksObject.onLoginError = f;
 	}
 
+	public static function setOnAppInviteComplete(f : String->Void) {	// passes a JSON object to f
+		callbacksObject.onAppInviteComplete = f;
+	}
+
+	public static function setOnAppInviteFail(f : String->Void) {
+		callbacksObject.onAppInviteFail = f;
+	}
+
 	@JNI("org.haxe.extension.facebook", "logout")
 	public static function logout() {}
 
@@ -60,7 +68,7 @@ class FacebookExtension {
 	}
 
 	@JNI("org.haxe.extension.facebook", "appInvite")
-	public static function appInvite(appLinkUrl : String, previewImageUrl : String) {}
+	public static function appInvite(appLinkUrl : String, previewImageUrl : String = null) {}
 
 	@JNI("org.haxe.extension.facebook", "shareLink")
 	public static function shareLink(
