@@ -19,6 +19,13 @@ class FacebookCFFI {
 		contentDescription : String
 	) {};
 
+	@CPP public static function gameRequestSend(
+		message : String,
+		title : String,
+		recipients : Array<String> = null,
+		objectId : String = null
+	) {};
+
 	@CPP public static function setOnLoginSuccessCallback(f : Void->Void);
 	@CPP public static function setOnLoginCancelCallback(f : Void->Void);
 	@CPP public static function setOnLoginErrorCallback(f : String->Void);

@@ -2,7 +2,7 @@
 #include <vector>
 
 #ifndef _FACEBOOK_H_
-#define _FACEBOOK_H_ 
+#define _FACEBOOK_H_
 
 namespace extension_facebook {
 
@@ -18,7 +18,15 @@ namespace extension_facebook {
 		std::string contentURL,
 		std::string contentTitle,
 		std::string imageURL,
-		std::string contentDescription);
+		std::string contentDescription
+	);
+
+	void gameRequestSend(
+		std::string message,
+		std::string title,
+		std::vector<std::string> &recipients,
+		std::string objectId
+	);
 
 	void onTokenChange(const char *token);
 	void onLoginSuccessCallback();

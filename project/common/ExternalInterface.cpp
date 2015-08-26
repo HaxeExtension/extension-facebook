@@ -17,6 +17,7 @@
 #define safe_alloc_string(a) (alloc_string(a!=NULL ? a : ""))
 #define safe_val_call0(func) if (func!=NULL) val_call0(func->get())
 #define safe_val_call1(func, arg1) if (func!=NULL) val_call1(func->get(), arg1)
+#define safe_val_string(str) str==NULL ? "" : std::string(val_string(str))
 
 AutoGCRoot* _onTokenChange;
 AutoGCRoot* _onLoginSuccessCallback;
@@ -124,8 +125,8 @@ DEFINE_PRIM(extension_facebook_setOnAppInviteFail, 1);
 
 static value extension_facebook_appInvite(value appLinkUrl, value previewImageUrl) {
 	extension_facebook::appInvite(
-		appLinkUrl==NULL ? "" : std::string(val_string(appLinkUrl)),
-		previewImageUrl==NULL ? "" : std::string(val_string(previewImageUrl))
+		safe_val_string(appLinkUrl),
+		safe_val_string(previewImageUrl)
 	);
 	return alloc_null();
 }
@@ -138,16 +139,43 @@ static value extension_facebook_shareLink(
 	value contentDescription) {
 
 	extension_facebook::shareLink(
-		contentURL==NULL ? "" : std::string(val_string(contentURL)),
-		contentTitle==NULL ? "" : std::string(val_string(contentTitle)),
-		imageURL==NULL ? "" : std::string(val_string(imageURL)),
-		contentDescription==NULL ? "" : std::string(val_string(contentDescription))
+		safe_val_string(contentURL),
+		safe_val_string(contentTitle),
+		safe_val_string(imageURL),
+		safe_val_string(contentDescription)
 	);
 
 	return alloc_null();
 
 }
 DEFINE_PRIM(extension_facebook_shareLink, 4);
+
+static value extension_facebook_gameRequestSend(
+	value message,
+	value title,
+	value recipients,
+	value objectId) {
+
+	int n = 0;
+	if (recipients!=NULL) {
+		n = val_array_size(recipients);
+	}
+	std::vector<std::string> stlRecipients;
+	for (int i=0;i<n;++i) {
+		std::string str(val_string(val_array_i(recipients, i)));
+		stlRecipients.push_back(str);
+	}
+
+	extension_facebook::gameRequestSend(
+		safe_val_string(message),
+		safe_val_string(title),
+		stlRecipients,
+		safe_val_string(objectId)
+	);
+	return alloc_null();
+
+}
+DEFINE_PRIM(extension_facebook_gameRequestSend, 4);
 
 extern "C" void extension_facebook_main () {
 	val_int(0); // Fix Neko init

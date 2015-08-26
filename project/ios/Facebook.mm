@@ -4,6 +4,8 @@
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKShareKit/FBSDKAppInviteContent.h>
 #import <FBSDKShareKit/FBSDKAppInviteDialog.h>
+#import <FBSDKShareKit/FBSDKGameRequestContent.h>
+#import <FBSDKShareKit/FBSDKGameRequestDialog.h>
 #import <FBSDKShareKit/FBSDKShareDialog.h>
 #import <FBSDKShareKit/FBSDKShareLinkContent.h>
 
@@ -109,6 +111,29 @@ namespace extension_facebook {
 			withContent:content
 			delegate:nil
 		];
+
+	}
+
+	void gameRequestSend(
+		std::string message,
+		std::string title,
+		std::vector<std::string> &recipients,
+		std::string objectId) {
+
+		FBSDKGameRequestContent *gameRequestContent = [[FBSDKGameRequestContent alloc] init];
+		gameRequestContent.message = [NSString stringWithUTF8String:message.c_str()];
+		gameRequestContent.title = [NSString stringWithUTF8String:title.c_str()];
+		
+		NSMutableArray *nsRecipients = [[NSMutableArray alloc] init];
+		for (auto p : recipients) {
+			[nsRecipients addObject:[NSString stringWithUTF8String:p.c_str()]];
+		}
+		gameRequestContent.recipients = nsRecipients;
+
+		if (objectId!="") {
+			gameRequestContent.objectID = [NSString stringWithUTF8String:objectId.c_str()];
+		}
+		[FBSDKGameRequestDialog showWithContent:gameRequestContent delegate:nil];
 
 	}
 
