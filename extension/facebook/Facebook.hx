@@ -122,6 +122,27 @@ class Facebook extends TaskExecutor {
 
 	}
 
+	public function delete(
+		resource : String,
+		onSuccess : Dynamic->Void = null,
+		parameters : Map<String, String> = null,
+		onError : Dynamic->Void = null
+	) : Void {
+
+		if (parameters==null) {
+			parameters = new Map<String, String>();
+		}
+		parameters.set("access_token", accessToken);
+
+		RestClient.deleteAsync(
+			"https://graph.facebook.com/v2.4"+resource,
+			function(x) onSuccess(Json.parse(x)),
+			parameters,
+			function(x) onError(Json.parse(x))
+		);
+
+	}
+
 	public function get(
 		resource : String,
 		onSuccess : Dynamic->Void = null,

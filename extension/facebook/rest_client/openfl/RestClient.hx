@@ -10,6 +10,24 @@ import flash.net.URLVariables;
 
 class RestClient {
 
+	public static function deleteAsync(
+		url : String,
+		onData:String->Void = null,
+		parameters:Map<String, String> = null,
+		onError:String->Void = null
+	) : Void {
+		req(url, onData, parameters, onError, URLRequestMethod.DELETE);
+	}
+
+	public static function getAsync(
+		url : String,
+		onData : String->Void = null,
+		parameters : Map<String, String> = null,
+		onError : String->Void = null
+	) : Void {
+		req(url, onData, parameters, onError, URLRequestMethod.GET);
+	}
+
 	public static function postAsync(
 		url : String,
 		onData:String->Void = null,
@@ -17,15 +35,6 @@ class RestClient {
 		onError:String->Void = null
 	) : Void {
 		req(url, onData, parameters, onError, URLRequestMethod.POST);
-	}
-	
-	public static function getAsync(
-		url : String,
-		onData : String->Void = null,
-		parameters : Map<String, String> = null,
-		onError : String->Void = null
-	) : Void {
-		req(url, onData, parameters, onError, URLRequestMethod.GET);		
 	}
 
 	static function req(
