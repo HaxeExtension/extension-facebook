@@ -265,7 +265,7 @@ public class FacebookExtension extends Extension {
 		GameRequestContent.Builder builder = new GameRequestContent.Builder();
 		builder.setMessage(message);
 		builder.setTitle(title);
-		if (recipients!="") {
+		if (recipients!=null && recipients!="") {
 			String[] arr = recipients.split(";");
 			if (arr.length>0) {
 				builder.setTo(arr[0]);

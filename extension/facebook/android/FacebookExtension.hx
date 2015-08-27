@@ -5,6 +5,17 @@ import openfl.utils.JNI;
 @:build(ShortCuts.mirrors())
 class FacebookExtension {
 
+	static function arrToString(arr : Array<String>) : String {
+		if (arr==null) {
+			return "";
+		}
+		var str = "";
+		for (s in arr) {
+			str += s + ";";
+		}
+		return str;
+	}
+
 	public static var callbacksObject : FacebookCallbacks;
 
 	public static function init(onTokenChange : String->Void) {
@@ -42,10 +53,7 @@ class FacebookExtension {
 	public static function logout() {}
 
 	public static function logInWithPublishPermissions(arr : Array<String>) {
-		var str = "";
-		for (s in arr) {
-			str += s + ";";
-		}
+		var str = arrToString(arr);
 		var fn = JNI.createStaticMethod(
 			"org.haxe.extension.facebook.FacebookExtension",
 			"logInWithPublishPermissions",
@@ -55,10 +63,7 @@ class FacebookExtension {
 	}
 
 	public static function logInWithReadPermissions(arr : Array<String>) {
-		var str = "";
-		for (s in arr) {
-			str += s + ";";
-		}
+		var str = arrToString(arr);
 		var fn = JNI.createStaticMethod(
 			"org.haxe.extension.facebook.FacebookExtension",
 			"logInWithReadPermissions",
@@ -77,5 +82,22 @@ class FacebookExtension {
 		imageURL : String,
 		contentDescription : String
 	) {}
+
+	public static function gameRequestSend(
+		message : String,
+		title : String,
+		recipients : Array<String> = null,
+		objectId : String = null,
+		actionType : Int = 0
+	) {
+		var arr = arrToString(recipients);
+		trace("ARRRRRRRRRRRRRRRRRR es: " + arr);
+		var fn = JNI.createStaticMethod(
+			"org.haxe.extension.facebook.FacebookExtension",
+			"gameRequestSend",
+			"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V"
+		);
+		JNI.callStatic(fn, [message, title, arr, objectId, actionType]);
+	}
 
 }

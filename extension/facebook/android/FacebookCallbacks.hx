@@ -9,11 +9,16 @@ class FacebookCallbacks extends TaskExecutor {
 	}
 
 	public var onTokenChange : String->Void;
+	
 	public var onLoginSucess : Void->Void;
 	public var onLoginCancel : Void->Void;
 	public var onLoginError : String->Void;
+
 	public var onAppInviteComplete : String->Void;
 	public var onAppInviteFail : String->Void;
+
+	public var onGameRequestComplete : String->Void;
+	public var onGameRequestFail : String->Void;
 
 	function _onTokenChange(token : String) {
 		if (onTokenChange!=null) {
@@ -48,6 +53,18 @@ class FacebookCallbacks extends TaskExecutor {
 	function _onAppInviteFail(str : String) {
 		if (onAppInviteFail!=null) {
 			addTask(new CallStrTask(onAppInviteFail, str));
+		}
+	}
+
+	function _onGameRequestComplete(str : String) {
+		if (onGameRequestComplete!=null) {
+			addTask(new CallStrTask(onGameRequestComplete, str));
+		}
+	}
+
+	function _onGameRequestFail(str : String) {
+		if (onGameRequestFail!=null) {
+			addTask(new CallStrTask(onGameRequestFail, str));
 		}
 	}
 
