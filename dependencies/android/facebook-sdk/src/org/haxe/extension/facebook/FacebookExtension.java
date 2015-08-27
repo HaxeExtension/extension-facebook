@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Log;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -14,9 +13,12 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.share.model.AppInviteContent;
-import com.facebook.share.model.ShareLinkContent.Builder;
+import com.facebook.share.model.GameRequestContent;
+import com.facebook.share.model.GameRequestContent.ActionType;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.AppInviteDialog;
+import com.facebook.share.widget.GameRequestDialog.Result;
+import com.facebook.share.widget.GameRequestDialog;
 import com.facebook.share.widget.ShareDialog;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,20 +34,26 @@ import org.haxe.lime.HaxeObject;
 
 public class FacebookExtension extends Extension {
 
-	static CallbackManager callbackManager;
-	static HaxeObject callbacks;
 	static AccessTokenTracker accessTokenTracker;
+	static CallbackManager callbackManager;
+	static GameRequestDialog requestDialog;
+	static HaxeObject callbacks;
 	static ShareDialog shareDialog;
 
 	public FacebookExtension() {
 
 		FacebookSdk.sdkInitialize(mainContext);
+		requestDialog = new GameRequestDialog(mainActivity);
 		shareDialog = new ShareDialog(mainActivity);
+
 		if (callbackManager!=null) {
 			return;
 		}
+
 		callbackManager = CallbackManager.Factory.create();
+
 		LoginManager.getInstance().registerCallback(callbackManager,
+
 			new FacebookCallback<LoginResult>() {
 				@Override
 				public void onSuccess(LoginResult loginResult) {
@@ -69,6 +77,43 @@ public class FacebookExtension extends Extension {
 				}
 		});
 
+		requestDialog.registerCallback(callbackManager, new FacebookCallback<GameRequestDialog.Result>() {
+
+			@Override
+			public void onSuccess(Result result) {
+				if (callbacks!=null) {
+					JSONObject json = new JSONObject();
+					try {
+						json.put("id", result.getRequestId());
+					} catch (JSONException e) {
+						Log.d("JSONException", e.toString());
+					}
+					JSONArray recipients = new JSONArray(result.getRequestRecipients());
+					try {
+						json.put("recipients", recipients);
+					} catch (JSONException e) {
+						Log.d("JSONException", e.toString());
+					}
+					callbacks.call1("_onGameRequestComplete", json.toString());
+				}
+			}
+
+			@Override
+			public void onCancel() {
+				if (callbacks!=null) {
+					callbacks.call1("_onGameRequestFail", "Cancelled");
+				}
+			}
+
+			@Override
+			public void onError(FacebookException error) {
+				if (callbacks!=null) {
+					callbacks.call1("_onGameRequestFail", error.toString());
+				}
+			}
+
+		});
+
 	}
 
 	public static Object wrap(Object o) {
@@ -85,7 +130,6 @@ public class FacebookExtension extends Extension {
 			if (o instanceof Collection) {
 				return new JSONArray((Collection) o);
 			} else if (o.getClass().isArray()) {
-				//return new JSONArray(o);
 				JSONArray arr = new JSONArray();
 				for (Object e : (Object[]) o) {
 					arr.put(e);
@@ -167,7 +211,7 @@ public class FacebookExtension extends Extension {
 						for (String key : keys) {
 							try {
 								json.put(key, wrap(bundle.get(key)));
-							} catch(JSONException e) {
+							} catch (JSONException e) {
 								Log.d("JSONException", e.toString());
 							}
 						}
@@ -194,7 +238,7 @@ public class FacebookExtension extends Extension {
 	}
 
 	public static void shareLink(String contentURL, String contentTitle, String imageURL, String contentDescription) {
-		Builder builder = new ShareLinkContent.Builder();
+		ShareLinkContent.Builder builder = new ShareLinkContent.Builder();
 		builder.setContentUrl(Uri.parse(contentURL));
 		if (contentTitle!="") {
 			builder.setContentTitle(contentTitle);
@@ -208,6 +252,44 @@ public class FacebookExtension extends Extension {
 		ShareLinkContent content = builder.build();
 		if (shareDialog!=null) {
 			shareDialog.show(content);
+		}
+	}
+
+	public static void gameRequestSend(
+		String message,
+		String title,
+		String recipients,
+		String objectID,
+		int actionType
+	) {
+		GameRequestContent.Builder builder = new GameRequestContent.Builder();
+		builder.setMessage(message);
+		builder.setTitle(title);
+		if (recipients!="") {
+			String[] arr = recipients.split(";");
+			if (arr.length>0) {
+				builder.setTo(arr[0]);
+			}
+		}
+		if (objectID!="") {
+			builder.setObjectId(objectID);
+		}
+		switch (actionType) {
+			case 0:
+				builder.setActionType(ActionType.ASKFOR);
+				break;
+			case 1:
+				builder.setActionType(ActionType.SEND);
+				break;
+			case 2:
+				builder.setActionType(ActionType.TURN);
+				break;
+			default:
+				builder.setActionType(ActionType.SEND);
+		}
+		GameRequestContent content = builder.build();
+		if (requestDialog!=null) {
+			requestDialog.show(content);
 		}
 	}
 
