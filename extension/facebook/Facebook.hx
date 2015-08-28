@@ -106,7 +106,7 @@ class Facebook extends TaskExecutor {
 						}
 					}
 					if (error) {
-						addTask(new CallTask(onFailure));
+						addTask(new CallStrTask(fOnError, "Error"));
 					}
 					c.write(error?HTMLAssets.getErrorHTML():HTMLAssets.getSuccessHTML());
 					c.close();
