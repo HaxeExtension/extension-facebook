@@ -88,10 +88,10 @@ class AppRequests {
 
 	public static function getObjectList(
 		f : Facebook,
-		onComplete : Dynamic->Void,
+		onComplete : Array<Dynamic>->Void,
 		onFail : Dynamic->Void
 	) {
-		f.get("/me/apprequests", onComplete, onFail);
+		f.getAll("/me/apprequests", onComplete, onFail);
 	}
 
 }
