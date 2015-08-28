@@ -109,7 +109,7 @@ class FacebookExtension {
 		var fn = JNI.createStaticMethod(
 			"org.haxe.extension.facebook.FacebookExtension",
 			"gameRequestSend",
-			"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I;Ljava/lang/String)V"
+			"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V"
 		);
 		JNI.callStatic(fn, [message, title, arr, objectId, actionType, data]);
 	}
