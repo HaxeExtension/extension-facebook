@@ -9,7 +9,7 @@ class FacebookCallbacks extends TaskExecutor {
 	}
 
 	public var onTokenChange : String->Void;
-	
+
 	public var onLoginSucess : Void->Void;
 	public var onLoginCancel : Void->Void;
 	public var onLoginError : String->Void;

@@ -260,7 +260,8 @@ public class FacebookExtension extends Extension {
 		String title,
 		String recipients,
 		String objectID,
-		int actionType
+		int actionType,
+		String data
 	) {
 		GameRequestContent.Builder builder = new GameRequestContent.Builder();
 		builder.setMessage(message);
@@ -271,7 +272,7 @@ public class FacebookExtension extends Extension {
 				builder.setTo(arr[0]);
 			}
 		}
-		if (objectID!="") {
+		if (objectID!=null & objectID!="") {
 			builder.setObjectId(objectID);
 		}
 		switch (actionType) {
@@ -286,6 +287,9 @@ public class FacebookExtension extends Extension {
 				break;
 			default:
 				builder.setActionType(ActionType.SEND);
+		}
+		if (data!=null && data!="") {
+			builder.setData(data);
 		}
 		GameRequestContent content = builder.build();
 		if (requestDialog!=null) {

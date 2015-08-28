@@ -29,6 +29,8 @@ class FacebookExtension {
 		JNI.callStatic(fn, [callbacksObject]);
 	}
 
+	// Login callbacks
+
 	public static function setOnLoginSuccessCallback(f : Void->Void) {
 		callbacksObject.onLoginSucess = f;
 	}
@@ -41,12 +43,24 @@ class FacebookExtension {
 		callbacksObject.onLoginError = f;
 	}
 
+	// App Invite callbacks
+
 	public static function setOnAppInviteComplete(f : String->Void) {	// passes a JSON object to f
 		callbacksObject.onAppInviteComplete = f;
 	}
 
 	public static function setOnAppInviteFail(f : String->Void) {
 		callbacksObject.onAppInviteFail = f;
+	}
+
+	// Game request callbacks
+
+	public static function setOnGameRequestComplete(f : String->Void) {
+		callbacksObject.onGameRequestComplete = f;
+	}
+
+	public static function setOnGameRequestFail(f : String->Void) {
+		callbacksObject.onGameRequestFail = f;
 	}
 
 	@JNI("org.haxe.extension.facebook", "logout")
@@ -88,16 +102,16 @@ class FacebookExtension {
 		title : String,
 		recipients : Array<String> = null,
 		objectId : String = null,
-		actionType : Int = 0
+		actionType : Int = 0,
+		data : String = null
 	) {
 		var arr = arrToString(recipients);
-		trace("ARRRRRRRRRRRRRRRRRR es: " + arr);
 		var fn = JNI.createStaticMethod(
 			"org.haxe.extension.facebook.FacebookExtension",
 			"gameRequestSend",
-			"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V"
+			"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I;Ljava/lang/String)V"
 		);
-		JNI.callStatic(fn, [message, title, arr, objectId, actionType]);
+		JNI.callStatic(fn, [message, title, arr, objectId, actionType, data]);
 	}
 
 }

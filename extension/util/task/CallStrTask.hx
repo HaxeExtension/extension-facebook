@@ -11,7 +11,6 @@ class CallStrTask extends Task {
 	}
 
 	override public function _do() {
-		trace("call str with: " + str);
 		fn(str);
 	}
 
