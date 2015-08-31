@@ -48,13 +48,13 @@ class Facebook extends TaskExecutor {
 	public function login(
 		type : PermissionsType,
 		permissions : Array<String>,
-		onSuccess : Void->Void,
+		onComplete : Void->Void,
 		onCancel : Void->Void,
 		onError : String->Void
 	) {
 
-		var fOnSuccess = function() {
-			addTask(new CallTask(onSuccess));
+		var fonComplete = function() {
+			addTask(new CallTask(onComplete));
 		}
 
 		var fOnCancel = function() {
@@ -67,7 +67,7 @@ class Facebook extends TaskExecutor {
 
 		#if (android || ios)
 
-		FacebookCFFI.setOnLoginSuccessCallback(fOnSuccess);
+		FacebookCFFI.setOnLoginSuccessCallback(fonComplete);
 		FacebookCFFI.setOnLoginCancelCallback(fOnCancel);
 		FacebookCFFI.setOnLoginErrorCallback(fOnError);
 
@@ -99,7 +99,7 @@ class Facebook extends TaskExecutor {
 								var arr = v.split("=");
 								if (arr[0]=="access_token") {
 									this.accessToken = arr[1];
-									addTask(new CallTask(onSuccess));
+									addTask(new CallTask(onComplete));
 									error = false;
 								}
 							}
@@ -122,21 +122,34 @@ class Facebook extends TaskExecutor {
 
 	}
 
+	function prependSlash(str : String) : String {
+		if (str.charAt(0)=="/") {
+			return str;
+		}
+		return "/" + str;
+	}
+
 	public function delete(
 		resource : String,
-		onSuccess : Dynamic->Void = null,
+		onComplete : Dynamic->Void = null,
 		parameters : Map<String, String> = null,
 		onError : Dynamic->Void = null
 	) : Void {
 
+		if (onComplete==null) {
+			onComplete = function(s) {};
+		}
 		if (parameters==null) {
 			parameters = new Map<String, String>();
+		}
+		if (onError==null) {
+			onError = function(s) {};
 		}
 		parameters.set("access_token", accessToken);
 
 		RestClient.deleteAsync(
-			"https://graph.facebook.com/v2.4"+resource,
-			function(x) onSuccess(Json.parse(x)),
+			"https://graph.facebook.com/v2.4"+prependSlash(resource),
+			function(x) onComplete(Json.parse(x)),
 			parameters,
 			function(x) onError(Json.parse(x))
 		);
@@ -145,19 +158,25 @@ class Facebook extends TaskExecutor {
 
 	public function get(
 		resource : String,
-		onSuccess : Dynamic->Void = null,
+		onComplete : Dynamic->Void = null,
 		parameters : Map<String, String> = null,
 		onError : Dynamic->Void = null
 	) : Void {
 
+		if (onComplete==null) {
+			onComplete = function(s) {};
+		}
 		if (parameters==null) {
 			parameters = new Map<String, String>();
+		}
+		if (onError==null) {
+			onError = function(s) {};
 		}
 		parameters.set("access_token", accessToken);
 
 		RestClient.getAsync(
-			"https://graph.facebook.com/v2.4"+resource,
-			function(x) onSuccess(Json.parse(x)),
+			"https://graph.facebook.com/v2.4"+prependSlash(resource),
+			function(x) onComplete(Json.parse(x)),
 			parameters,
 			function(x) onError(Json.parse(x))
 		);
@@ -167,7 +186,7 @@ class Facebook extends TaskExecutor {
 	// get the full list of some resource (manages paging)
 	public function getAll<T>(
 		resource : String,
-		onSuccess : Array<T>->Void,
+		onComplete : Array<T>->Void,
 		parameters : Map<String, String> = null,
 		onError : Dynamic->Void = null,
 		acum : Array<T> = null,
@@ -178,15 +197,15 @@ class Facebook extends TaskExecutor {
 		}
 
 		get(
-			resource,
+			prependSlash(resource),
 			function(data) {
 				for (it in cast(data.data, Array<Dynamic>)) {
 					acum.push(it);
 				}
 				if (data.paging!=null && data.paging.cursors!=null && data.paging.cursors.after!=null) {
-					getAll(resource, onSuccess, onError, acum, data.paging.cursors.after);
+					getAll(resource, onComplete, onError, acum, data.paging.cursors.after);
 				} else {
-					onSuccess(acum);
+					onComplete(acum);
 				}
 			},
 			after==null ? null : [ "after" => after ],
@@ -197,19 +216,25 @@ class Facebook extends TaskExecutor {
 
 	public function post(
 		resource : String,
-		onSuccess : Dynamic->Void = null,
+		onComplete : Dynamic->Void = null,
 		parameters : Map<String, String> = null,
 		onError : Dynamic->Void = null
 	) : Void {
 
+		if (onComplete==null) {
+			onComplete = function(s) {};
+		}
 		if (parameters==null) {
 			parameters = new Map<String, String>();
+		}
+		if (onError==null) {
+			onError = function(s) {};
 		}
 		parameters.set("access_token", accessToken);
 
 		RestClient.postAsync(
-			"https://graph.facebook.com/v2.4"+resource,
-			function(x) onSuccess(Json.parse(x)),
+			"https://graph.facebook.com/v2.4"+prependSlash(resource),
+			function(x) onComplete(Json.parse(x)),
 			parameters,
 			function(x) onError(Json.parse(x))
 		);
