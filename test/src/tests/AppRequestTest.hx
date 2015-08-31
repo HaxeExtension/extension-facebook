@@ -12,17 +12,17 @@ import haxe.unit.TestCase;
 class AppRequestTest extends TestCase {
 
 	var spr : Sprite;
-	var objs : Array<Sprite>;
+	var objs : Array<{id : String, spr : Sprite}>;
 	var face : Facebook;
 
-	function addObj(str : String) {
+	function addObj(fbObj : FBObject) {
 		var newObj = new Sprite();
 		newObj.addEventListener(MouseEvent.CLICK, function(m) {
-			removeObj(newObj);
+			removeObj(newObj, true);
 		});
 		var txt = new TextField();
 		txt.autoSize = TextFieldAutoSize.LEFT;
-		txt.text = str;
+		txt.text = fbObj.message;
 		txt.scaleX = txt.scaleY = 2.0;
 		var gfx = newObj.graphics;
 		var r = Std.random(100)+100;
@@ -33,39 +33,52 @@ class AppRequestTest extends TestCase {
 		gfx.endFill();
 		newObj.addChild(txt);
 		spr.addChild(newObj);
-		objs.push(newObj);
+		objs.push({id : fbObj.id, spr : newObj});
 		updateObjsPos();
 	}
 
-	function removeObj(obj : Sprite) {
-		objs.remove(obj);
+	function removeObj(obj : Sprite, fromServer : Bool = false) {
+		var toRemove = null;
+		for (o in objs) {
+			if (o.spr == obj) {
+				toRemove = o;
+			}
+		}
+		objs.remove(toRemove);
 		spr.removeChild(obj);
+		if (fromServer) {
+			AppRequests.deleteObject(
+				face,
+				toRemove.id,
+				function(str) trace("complete: " + str),
+				function(str) trace("fail: " + str)
+			);
+		}
 		updateObjsPos();
 	}
 
 	function updateObjsPos() {
 		var yPos = 0.0;
 		for (o in objs) {
-			o.y = yPos;
-			yPos += o.height + 10;
+			o.spr.y = yPos;
+			yPos += o.spr.height + 10;
 		}
 	}
 
 	function onUpdate(m : MouseEvent) {
-		trace("update");
 		var toRemove = objs.copy();
 		for (r in toRemove) {
-			removeObj(r);
+			removeObj(r.spr);
 		}
 		AppRequests.getObjectList(face, function(objs) {
 			for (o in objs) {
-				addObj(o.message);
+				trace("Object: " + o);
+				addObj(o);
 			}
 		}, function(o) trace(o));
 	}
 
 	function onSend(m : MouseEvent) {
-		trace("send");
 		AppRequests.gameRequestSend({
 			message : "Mensaje de test: " + Std.random(1000),
 			title : "Titleloko",
@@ -130,11 +143,6 @@ class AppRequestTest extends TestCase {
 		send.x = Lib.current.stage.stageWidth - send.width;
 		send.y = Lib.current.stage.stageHeight - send.height;
 		send.addEventListener(MouseEvent.CLICK, onSend);
-
-
-		addObj("primero");
-		addObj("segundo");
-		addObj("tercero");
 
 		assertTrue(true);
 	}

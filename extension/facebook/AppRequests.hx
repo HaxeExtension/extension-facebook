@@ -32,6 +32,8 @@ typedef ApplicationData = {
 	var name : String;
 	var namespace : String;
 	var id : String;
+	@:optional var category : String;
+	@:optional var link : String;
 }
 
 typedef UserData = {
@@ -63,33 +65,43 @@ class AppRequests {
 		#end
 	}
 
-	public static function setOnCompleteCallback(f : SendResponse->Void) {
+	public static function setOnCompleteCallback(fun : SendResponse->Void) {
 		#if (android || ios)
 		FacebookCFFI.setOnGameRequestComplete(function (str) {
-			f(Json.parse(str));
+			fun(Json.parse(str));
 		});
 		#end
 	}
 
-	public static function setOnFailCallback(f : String->Void) {
+	public static function setOnFailCallback(fun : String->Void) {
 		#if (android || ios)
-		FacebookCFFI.setOnGameRequestFail(f);
+		FacebookCFFI.setOnGameRequestFail(fun);
 		#end
+	}
+
+	public static function deleteObject(
+		f : Facebook,
+		id : String,
+		onComplete : FBObject->Void = null,
+		onFail : Dynamic->Void = null
+	) {
+		f.delete(id, onComplete, onFail);
 	}
 
 	public static function getObject(
 		f : Facebook,
 		id : String,
-		onComplete : FBObject->Void,
-		onFail : Dynamic->Void
+		onComplete : FBObject->Void = null,
+		onFail : Dynamic->Void = null
 	) {
-		f.get("/" + id, onComplete, onFail);
+		f.get(id, onComplete, onFail);
 	}
+
 
 	public static function getObjectList(
 		f : Facebook,
-		onComplete : Array<Dynamic>->Void,
-		onFail : Dynamic->Void
+		onComplete : Array<FBObject>->Void = null,
+		onFail : Dynamic->Void = null
 	) {
 		f.getAll("/me/apprequests", onComplete, onFail);
 	}
