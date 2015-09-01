@@ -8,7 +8,7 @@ import extension.facebook.ios.FacebookCFFI;
 #end
 
 @:enum
-abstract GameRequestActionType(Int) to Int {
+abstract AppRequestActionType(Int) to Int {
 	var AskFor = 0;
 	var Send = 1;
 	var Turn = 2;
@@ -19,7 +19,7 @@ typedef SendOptions = {
 	@:optional var title : String;
 	@:optional var recipients : Array<String>;
 	@:optional var objectId : String;
-	@:optional var actionType : GameRequestActionType;
+	@:optional var actionType : AppRequestActionType;
 	@:optional var data : String;
 }
 
@@ -52,7 +52,7 @@ typedef FBObject = {
 
 class AppRequests {
 
-	public static function gameRequestSend(options : SendOptions) {
+	public static function sendObject(options : SendOptions) {
 		#if (android || ios)
 		FacebookCFFI.gameRequestSend(
 			options.message,
@@ -65,17 +65,17 @@ class AppRequests {
 		#end
 	}
 
-	public static function setOnCompleteCallback(fun : SendResponse->Void) {
+	public static function setOnSendObjectCompleted(fun : SendResponse->Void) {
 		#if (android || ios)
-		FacebookCFFI.setOnGameRequestComplete(function (str) {
+		FacebookCFFI.setOnAppRequestComplete(function (str) {
 			fun(Json.parse(str));
 		});
 		#end
 	}
 
-	public static function setOnFailCallback(fun : String->Void) {
+	public static function setOnSendObjectFailed(fun : String->Void) {
 		#if (android || ios)
-		FacebookCFFI.setOnGameRequestFail(fun);
+		FacebookCFFI.setOnAppRequestFail(fun);
 		#end
 	}
 

@@ -55,12 +55,12 @@ class FacebookExtension {
 
 	// Game request callbacks
 
-	public static function setOnGameRequestComplete(f : String->Void) {
-		callbacksObject.onGameRequestComplete = f;
+	public static function setOnAppRequestComplete(f : String->Void) {
+		callbacksObject.onAppRequestComplete = f;
 	}
 
-	public static function setOnGameRequestFail(f : String->Void) {
-		callbacksObject.onGameRequestFail = f;
+	public static function setOnAppRequestFail(f : String->Void) {
+		callbacksObject.onAppRequestFail = f;
 	}
 
 	@JNI("org.haxe.extension.facebook", "logout")

@@ -94,21 +94,21 @@ public class FacebookExtension extends Extension {
 					} catch (JSONException e) {
 						Log.d("JSONException", e.toString());
 					}
-					callbacks.call1("_onGameRequestComplete", json.toString());
+					callbacks.call1("_onAppRequestComplete", json.toString());
 				}
 			}
 
 			@Override
 			public void onCancel() {
 				if (callbacks!=null) {
-					callbacks.call1("_onGameRequestFail", "Cancelled");
+					callbacks.call1("_onAppRequestFail", "{\"error\" : \"cancelled}\"");
 				}
 			}
 
 			@Override
 			public void onError(FacebookException error) {
 				if (callbacks!=null) {
-					callbacks.call1("_onGameRequestFail", error.toString());
+					callbacks.call1("_onAppRequestFail", error.toString());
 				}
 			}
 
