@@ -74,15 +74,12 @@ class FacebookCallbacks extends TaskExecutor {
 	function onGraphCallback(status : String, data : String, id : Int) {
 		var gCallback = graphCallbacks.get(id);
 		if (status!="error") {
-			trace("Ok result: " + data);
 			if (gCallback.onComplete!=null) {
-				gCallback.onComplete(data);
-				trace("post");
+				addTask(new CallStrTask(gCallback.onComplete, data));
 			}
 		} else {
-			trace("Failed result: " + data);
 			if (gCallback.onFail!=null) {
-				gCallback.onFail(data);
+				addTask(new CallStrTask(gCallback.onFail, data));
 			}
 		}
 		graphCallbacks.remove(id);
