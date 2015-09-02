@@ -9,12 +9,17 @@ import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookRequestError;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.internal.BundleJSONConverter;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.share.model.AppInviteContent;
-import com.facebook.share.model.GameRequestContent;
 import com.facebook.share.model.GameRequestContent.ActionType;
+import com.facebook.share.model.GameRequestContent;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.AppInviteDialog;
 import com.facebook.share.widget.GameRequestDialog.Result;
@@ -295,6 +300,64 @@ public class FacebookExtension extends Extension {
 		if (requestDialog!=null) {
 			requestDialog.show(content);
 		}
+	}
+
+	public static void graphRequest(
+		String graphPath,
+		String parametersJson,
+		String methodStr,
+		final int id
+	) {
+
+		Bundle bundle = new Bundle();
+		try {
+			JSONObject jsonObject = new JSONObject(parametersJson);
+			bundle = BundleJSONConverter.convertToBundle(jsonObject);
+		} catch (JSONException e) {
+			Log.d("JSONException", e.toString());
+		}
+
+		HttpMethod method;
+		switch (methodStr.toUpperCase()) {
+		case "DELETE":
+			method = HttpMethod.DELETE;
+			break;
+		case "POST":
+			method = HttpMethod.POST;
+			break;
+		default:
+			method = HttpMethod.GET;
+			break;
+		}
+
+		final GraphRequest req = new GraphRequest(
+			AccessToken.getCurrentAccessToken(),
+			graphPath,
+			bundle,
+			method,
+			new GraphRequest.Callback() {
+				@Override
+				public void onCompleted(GraphResponse response) {
+					if (callbacks!=null) {
+						FacebookRequestError error = response.getError();
+						GraphRequest req = response.getRequest();
+						if (error==null) {
+							callbacks.call3("onGraphCallback", "ok", response.getRawResponse(), id);
+						} else {
+							callbacks.call3("onGraphCallback", "error", response.getError().getErrorMessage(), id);
+						}
+					}
+				}
+
+			}
+		);
+		mainActivity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				req.executeAsync();
+			}
+		});
+
 	}
 
 	// !Static methods interface

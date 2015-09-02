@@ -1,5 +1,6 @@
 package extension.facebook.android;
 
+import haxe.Json;
 import openfl.utils.JNI;
 
 @:build(ShortCuts.mirrors())
@@ -16,7 +17,7 @@ class FacebookExtension {
 		return str;
 	}
 
-	public static var callbacksObject : FacebookCallbacks;
+	/*public*/ static var callbacksObject : FacebookCallbacks;
 
 	public static function init(onTokenChange : String->Void) {
 		callbacksObject = new FacebookCallbacks();
@@ -96,6 +97,29 @@ class FacebookExtension {
 		imageURL : String,
 		contentDescription : String
 	) {}
+
+	static var graphRequestID = 0;
+
+	public static function graphRequest(
+		graphPath : String,
+		parameters : Map<String, String>,
+		methodStr : String,
+		onData : String->Void,
+		onError : String->Void
+	) {
+		var fn = JNI.createStaticMethod(
+			"org.haxe.extension.facebook.FacebookExtension",
+			"graphRequest",
+			"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V"
+		);
+		var dyn = {};
+		for (k in parameters.keys()) {
+			Reflect.setField(dyn, k, parameters.get(k));
+		}
+		callbacksObject.graphCallbacks[graphRequestID] = { onComplete : onData, onFail : onError };
+		JNI.callStatic(fn, [graphPath, Json.stringify(dyn), methodStr, graphRequestID]);
+		graphRequestID++;
+	}
 
 	public static function gameRequestSend(
 		message : String,

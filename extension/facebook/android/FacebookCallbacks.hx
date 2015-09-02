@@ -4,10 +4,6 @@ import extension.util.task.*;
 
 class FacebookCallbacks extends TaskExecutor {
 
-	public function new() {
-		super();
-	}
-
 	public var onTokenChange : String->Void;
 
 	public var onLoginSucess : Void->Void;
@@ -19,6 +15,13 @@ class FacebookCallbacks extends TaskExecutor {
 
 	public var onAppRequestComplete : String->Void;
 	public var onAppRequestFail : String->Void;
+
+	public var graphCallbacks : Map<Int, { onComplete : String->Void, onFail : String->Void }>;
+
+	public function new() {
+		super();
+		graphCallbacks = new Map<Int, { onComplete : String->Void, onFail : String->Void }>();
+	}
 
 	function _onTokenChange(token : String) {
 		if (onTokenChange!=null) {
@@ -66,6 +69,23 @@ class FacebookCallbacks extends TaskExecutor {
 		if (onAppRequestFail!=null) {
 			addTask(new CallStrTask(onAppRequestFail, str));
 		}
+	}
+
+	function onGraphCallback(status : String, data : String, id : Int) {
+		var gCallback = graphCallbacks.get(id);
+		if (status!="error") {
+			trace("Ok result: " + data);
+			if (gCallback.onComplete!=null) {
+				gCallback.onComplete(data);
+				trace("post");
+			}
+		} else {
+			trace("Failed result: " + data);
+			if (gCallback.onFail!=null) {
+				gCallback.onFail(data);
+			}
+		}
+		graphCallbacks.remove(id);
 	}
 
 }

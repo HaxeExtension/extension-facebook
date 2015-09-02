@@ -145,15 +145,23 @@ class Facebook extends TaskExecutor {
 		if (onError==null) {
 			onError = function(s) {};
 		}
+		#if android
+		FacebookCFFI.graphRequest(
+			prependSlash(resource),
+			parameters,
+			"DELETE",
+			function(x) onComplete(Json.parse(x)),
+			function(x) onError(Json.parse(x))
+		);
+		#else
 		parameters.set("access_token", accessToken);
-
 		RestClient.deleteAsync(
 			"https://graph.facebook.com/v2.4"+prependSlash(resource),
 			function(x) onComplete(Json.parse(x)),
 			parameters,
 			function(x) onError(Json.parse(x))
 		);
-
+		#end
 	}
 
 	public function get(
@@ -172,14 +180,23 @@ class Facebook extends TaskExecutor {
 		if (onError==null) {
 			onError = function(s) {};
 		}
+		#if android
+		FacebookCFFI.graphRequest(
+			prependSlash(resource),
+			parameters,
+			"GET",
+			function(x) onComplete(Json.parse(x)),
+			function(x) onError(Json.parse(x))
+		);
+		#else
 		parameters.set("access_token", accessToken);
-
 		RestClient.getAsync(
 			"https://graph.facebook.com/v2.4"+prependSlash(resource),
 			function(x) onComplete(Json.parse(x)),
 			parameters,
 			function(x) onError(Json.parse(x))
 		);
+		#end
 
 	}
 
@@ -198,7 +215,7 @@ class Facebook extends TaskExecutor {
 
 		get(
 			prependSlash(resource),
-			function(data) {
+			function (data) {
 				for (it in cast(data.data, Array<Dynamic>)) {
 					acum.push(it);
 				}
@@ -230,15 +247,23 @@ class Facebook extends TaskExecutor {
 		if (onError==null) {
 			onError = function(s) {};
 		}
+		#if android
+		FacebookCFFI.graphRequest(
+			prependSlash(resource),
+			parameters,
+			"POST",
+			function(x) onComplete(Json.parse(x)),
+			function(x) onError(Json.parse(x))
+		);
+		#else
 		parameters.set("access_token", accessToken);
-
 		RestClient.postAsync(
 			"https://graph.facebook.com/v2.4"+prependSlash(resource),
 			function(x) onComplete(Json.parse(x)),
 			parameters,
 			function(x) onError(Json.parse(x))
 		);
-
+		#end
 	}
 
 }
