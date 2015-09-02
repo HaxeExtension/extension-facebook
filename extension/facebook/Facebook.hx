@@ -145,6 +145,7 @@ class Facebook extends TaskExecutor {
 		if (onError==null) {
 			onError = function(s) {};
 		}
+		parameters.set("redirect", "false");
 		#if android
 		FacebookCFFI.graphRequest(
 			prependSlash(resource),
@@ -180,6 +181,7 @@ class Facebook extends TaskExecutor {
 		if (onError==null) {
 			onError = function(s) {};
 		}
+		parameters.set("redirect", "false");
 		#if android
 		FacebookCFFI.graphRequest(
 			prependSlash(resource),
@@ -212,7 +214,12 @@ class Facebook extends TaskExecutor {
 		if (acum==null) {
 			acum = [];
 		}
-
+		if (parameters==null) {
+			parameters = new Map<String, String>();
+		}
+		if (after!=null) {
+			parameters.set("after", after);
+		}
 		get(
 			prependSlash(resource),
 			function (data) {
@@ -225,7 +232,7 @@ class Facebook extends TaskExecutor {
 					onComplete(acum);
 				}
 			},
-			after==null ? null : [ "after" => after ],
+			parameters,
 			onError
 		);
 
@@ -247,6 +254,7 @@ class Facebook extends TaskExecutor {
 		if (onError==null) {
 			onError = function(s) {};
 		}
+		parameters.set("redirect", "false");
 		#if android
 		FacebookCFFI.graphRequest(
 			prependSlash(resource),
