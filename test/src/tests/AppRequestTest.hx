@@ -2,11 +2,20 @@ package tests;
 
 import extension.facebook.AppRequests;
 import extension.facebook.Facebook;
+import flash.display.Bitmap;
+import flash.display.BitmapData;
+import flash.display.PixelSnapping;
 import flash.display.Sprite;
+import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.Lib;
+import flash.net.URLLoader;
+import flash.net.URLLoaderDataFormat;
+import flash.net.URLRequest;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
+import flash.utils.ByteArray;
+import haxe.io.Bytes;
 import haxe.unit.TestCase;
 
 class AppRequestTest extends TestCase {
@@ -14,6 +23,9 @@ class AppRequestTest extends TestCase {
 	var spr : Sprite;
 	var objs : Array<{id : String, spr : Sprite}>;
 	var face : Facebook;
+	var opponentId : String;
+	var send : Sprite;
+	var update : Sprite;
 
 	function addObj(fbObj : FBObject) {
 		var newObj = new Sprite();
@@ -72,24 +84,78 @@ class AppRequestTest extends TestCase {
 		}
 		AppRequests.getObjectList(face, function(objs) {
 			for (o in objs) {
-				trace("Object: " + o);
 				addObj(o);
 			}
 		}, function(o) trace(o));
 	}
 
 	function onSend(m : MouseEvent) {
-		AppRequests.gameRequestSend({
-			message : "Mensaje de test: " + Std.random(1000),
-			title : "Titleloko",
-			objectId : "1494850427480255",
-			actionType : GameRequestActionType.Send
-		});
+		if (opponentId!=null && opponentId!="") {
+			AppRequests.setOnSendObjectCompleted(function (response) {
+				trace("Successfully reused: " + opponentId);
+			});
+			AppRequests.sendObject({
+				message : "Mensaje de test: " + Std.random(1000),
+				title : "Titleloko",
+				objectId : "1494850427480255",
+				actionType : AppRequestActionType.Send,
+				recipients : [opponentId]
+			});
+		} else {
+			AppRequests.setOnSendObjectCompleted(function (response) {
+
+				// On Android returns "recipients", on IOs "to"
+				var arr = response.recipients==null ? response.to : response.recipients;
+
+				if (arr.length>0) {
+					opponentId = arr[0];
+
+					trace("Opponent id: " + opponentId);
+					face.get('$opponentId/picture', function(pic) {
+						if (pic.data!=null && pic.data.url!=null) {
+							var url : String = pic.data.url;
+							var ldr = new URLLoader();
+							ldr.dataFormat = URLLoaderDataFormat.BINARY;
+							ldr.addEventListener(Event.COMPLETE, function(e : Event) {
+								/*
+								var arr = new ByteArray();
+								var str = e.target.data;
+								arr.writeUTFBytes(str);
+								*/
+								var bmpData = BitmapData.loadFromBytes(ldr.data);
+								//var bmpData : BitmapData = cast(e.currentTarget.content, Bitmap).bitmapData;
+								var bitmap = new Bitmap(bmpData);
+								var sprB = new Sprite();
+								sprB.addChild(bitmap);
+								spr.addChild(sprB);
+								sprB.scaleX = sprB.scaleY = 4.0;
+								sprB.x = Lib.current.stage.stageWidth/2 - sprB.width/2;
+								sprB.y = Lib.current.stage.stageHeight/2 - sprB.height/2;
+							});
+							ldr.load(new URLRequest(url));
+						}
+					});
+
+				}
+			});
+			AppRequests.sendObject({
+				message : "Mensaje de test: " + Std.random(1000),
+				title : "Titleloko",
+				objectId : "1494850427480255",
+				actionType : AppRequestActionType.Send
+			});
+		}
+	}
+
+	function onResize(_) {
+		update.y = Lib.current.stage.stageHeight - update.height;
+		send.x = Lib.current.stage.stageWidth - send.width;
+		send.y = Lib.current.stage.stageHeight - send.height;
 	}
 
 	// Entry point:
 	public function test() {
-		
+
 		face = new Facebook();
 		if (face.accessToken=="") {
 			face.login(
@@ -111,7 +177,7 @@ class AppRequestTest extends TestCase {
 		Lib.current.stage.addChild(spr);
 		objs = [];
 
-		var update = new Sprite();
+		update = new Sprite();
 		var gfx = update.graphics;
 		gfx.beginFill(0xff55ff);
 		gfx.drawRect(0, 0, 200, 200);
@@ -127,7 +193,7 @@ class AppRequestTest extends TestCase {
 		update.y = Lib.current.stage.stageHeight - update.height;
 		update.addEventListener(MouseEvent.CLICK, onUpdate);
 
-		var send = new Sprite();
+		send = new Sprite();
 		gfx = send.graphics;
 		gfx.beginFill(0xffff55);
 		gfx.drawRect(0, 0, 200, 200);
@@ -143,6 +209,8 @@ class AppRequestTest extends TestCase {
 		send.x = Lib.current.stage.stageWidth - send.width;
 		send.y = Lib.current.stage.stageHeight - send.height;
 		send.addEventListener(MouseEvent.CLICK, onSend);
+
+		Lib.current.stage.addEventListener(Event.RESIZE, onResize);
 
 		assertTrue(true);
 	}
