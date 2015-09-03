@@ -121,7 +121,7 @@ class FacebookExtension {
 		graphRequestID++;
 	}
 
-	public static function gameRequestSend(
+	public static function appRequest(
 		message : String,
 		title : String,
 		recipients : Array<String> = null,
@@ -132,7 +132,7 @@ class FacebookExtension {
 		var arr = arrToString(recipients);
 		var fn = JNI.createStaticMethod(
 			"org.haxe.extension.facebook.FacebookExtension",
-			"gameRequestSend",
+			"appRequest",
 			"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V"
 		);
 		JNI.callStatic(fn, [message, title, arr, objectId, actionType, data]);

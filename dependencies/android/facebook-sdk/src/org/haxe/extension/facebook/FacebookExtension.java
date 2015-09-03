@@ -260,7 +260,7 @@ public class FacebookExtension extends Extension {
 		}
 	}
 
-	public static void gameRequestSend(
+	public static void appRequest(
 		String message,
 		String title,
 		String recipients,
@@ -281,13 +281,13 @@ public class FacebookExtension extends Extension {
 			builder.setObjectId(objectID);
 		}
 		switch (actionType) {
-			case 0:
-				builder.setActionType(ActionType.ASKFOR);
-				break;
 			case 1:
 				builder.setActionType(ActionType.SEND);
 				break;
 			case 2:
+				builder.setActionType(ActionType.ASKFOR);
+				break;
+			case 3:
 				builder.setActionType(ActionType.TURN);
 				break;
 			default:

@@ -9,12 +9,12 @@ import extension.facebook.ios.FacebookCFFI;
 
 @:enum
 abstract AppRequestActionType(Int) to Int {
-	var AskFor = 0;
 	var Send = 1;
-	var Turn = 2;
+	var AskFor = 2;
+	var Turn = 3;
 }
 
-typedef SendOptions = {
+typedef AppRequest = {
 	@:optional var message : String;
 	@:optional var title : String;
 	@:optional var recipients : Array<String>;
@@ -23,9 +23,10 @@ typedef SendOptions = {
 	@:optional var data : String;
 }
 
-typedef SendResponse = {
+typedef AppRequestResponse = {
 	var id : String;
-	var recipients : Array<String>;
+	@:optional var recipients : Array<String>;
+	@:optional var to : Array<String>;
 }
 
 typedef ApplicationData = {
@@ -52,9 +53,9 @@ typedef FBObject = {
 
 class AppRequests {
 
-	public static function sendObject(options : SendOptions) {
+	public static function sendObject(options : AppRequest) {
 		#if (android || ios)
-		FacebookCFFI.gameRequestSend(
+		FacebookCFFI.appRequest(
 			options.message,
 			options.title,
 			options.recipients,
@@ -65,7 +66,7 @@ class AppRequests {
 		#end
 	}
 
-	public static function setOnSendObjectCompleted(fun : SendResponse->Void) {
+	public static function setOnSendObjectCompleted(fun : AppRequestResponse->Void) {
 		#if (android || ios)
 		FacebookCFFI.setOnAppRequestComplete(function (str) {
 			fun(Json.parse(str));
