@@ -21,19 +21,26 @@ namespace extension_facebook {
 		std::string contentDescription
 	);
 
-	void gameRequestSend(
+	void appRequest(
 		std::string message,
 		std::string title,
 		std::vector<std::string> &recipients,
-		std::string objectId
+		std::string objectId,
+		int actionType,
+		std::string data
 	);
 
 	void onTokenChange(const char *token);
+
 	void onLoginSuccessCallback();
 	void onLoginCancelCallback();
 	void onLoginErrorCallback(const char *error);
+
 	void onAppInviteComplete(const char *json);
 	void onAppInviteFail(const char *error);
+
+	void onAppRequestComplete(const char *json);
+	void onAppRequestFail(const char *error);
 
 }
 

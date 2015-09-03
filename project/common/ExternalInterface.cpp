@@ -25,6 +25,8 @@ AutoGCRoot* _onLoginCancelCallback;
 AutoGCRoot* _onLoginErrorCallback;
 AutoGCRoot* _onAppInviteComplete;
 AutoGCRoot* _onAppInviteFail;
+AutoGCRoot* _onAppRequestComplete;
+AutoGCRoot* _onAppRequestFail;
 
 void extension_facebook::onTokenChange(const char *token) {
 	safe_val_call1(_onTokenChange, safe_alloc_string(token));
@@ -48,6 +50,14 @@ void extension_facebook::onAppInviteComplete(const char *json) {
 
 void extension_facebook::onAppInviteFail(const char *error) {
 	safe_val_call1(_onAppInviteFail, safe_alloc_string(error));
+}
+
+void extension_facebook::onAppRequestComplete(const char *json) {
+	safe_val_call1(_onAppRequestComplete, safe_alloc_string(json));
+}
+
+void extension_facebook::onAppRequestFail(const char *error) {
+	safe_val_call1(_onAppRequestFail, safe_alloc_string(error));
 }
 
 static value extension_facebook_init(value onTokenChange) {
@@ -123,6 +133,18 @@ static value extension_facebook_setOnAppInviteFail(value fun) {
 }
 DEFINE_PRIM(extension_facebook_setOnAppInviteFail, 1);
 
+static value extension_facebook_setOnAppRequestComplete(value fun) {
+	_onAppRequestComplete = new AutoGCRoot(fun);
+	return alloc_null();
+}
+DEFINE_PRIM(extension_facebook_setOnAppRequestComplete, 1);
+
+static value extension_facebook_setOnAppRequestFail(value fun) {
+	_onAppRequestFail = new AutoGCRoot(fun);
+	return alloc_null();
+}
+DEFINE_PRIM(extension_facebook_setOnAppRequestFail, 1);
+
 static value extension_facebook_appInvite(value appLinkUrl, value previewImageUrl) {
 	extension_facebook::appInvite(
 		safe_val_string(appLinkUrl),
@@ -150,32 +172,45 @@ static value extension_facebook_shareLink(
 }
 DEFINE_PRIM(extension_facebook_shareLink, 4);
 
-static value extension_facebook_gameRequestSend(
-	value message,
-	value title,
-	value recipients,
-	value objectId) {
+static value extension_facebook_appRequest(value *arg, int count) {
+
+	enum {
+		message,
+		title,
+		recipients,
+		objectId,
+		actionType,
+		data,
+		aSIZE
+	};
+
+	if (count!=aSIZE) {
+		printf("\"extension_facebook_appRequest\" wrong number of params\n");
+	}
 
 	int n = 0;
-	if (recipients!=NULL) {
-		n = val_array_size(recipients);
+	if (arg[recipients]!=NULL) {
+		n = val_array_size(arg[recipients]);
 	}
 	std::vector<std::string> stlRecipients;
 	for (int i=0;i<n;++i) {
-		std::string str(val_string(val_array_i(recipients, i)));
+		std::string str(val_string(val_array_i(arg[recipients], i)));
 		stlRecipients.push_back(str);
 	}
 
-	extension_facebook::gameRequestSend(
-		safe_val_string(message),
-		safe_val_string(title),
+	extension_facebook::appRequest(
+		safe_val_string(arg[message]),
+		safe_val_string(arg[title]),
 		stlRecipients,
-		safe_val_string(objectId)
+		safe_val_string(arg[objectId]),
+		val_int(arg[actionType]),
+		safe_val_string(arg[data])
 	);
+
 	return alloc_null();
 
 }
-DEFINE_PRIM(extension_facebook_gameRequestSend, 4);
+DEFINE_PRIM_MULT(extension_facebook_appRequest);
 
 extern "C" void extension_facebook_main () {
 	val_int(0); // Fix Neko init

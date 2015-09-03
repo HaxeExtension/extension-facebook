@@ -114,16 +114,18 @@ namespace extension_facebook {
 
 	}
 
-	void gameRequestSend(
+	void appRequest(
 		std::string message,
 		std::string title,
 		std::vector<std::string> &recipients,
-		std::string objectId) {
+		std::string objectId,
+		int actionType,
+		std::string data) {
 
 		FBSDKGameRequestContent *gameRequestContent = [[FBSDKGameRequestContent alloc] init];
 		gameRequestContent.message = [NSString stringWithUTF8String:message.c_str()];
 		gameRequestContent.title = [NSString stringWithUTF8String:title.c_str()];
-		
+
 		NSMutableArray *nsRecipients = [[NSMutableArray alloc] init];
 		for (auto p : recipients) {
 			[nsRecipients addObject:[NSString stringWithUTF8String:p.c_str()]];
@@ -133,7 +135,26 @@ namespace extension_facebook {
 		if (objectId!="") {
 			gameRequestContent.objectID = [NSString stringWithUTF8String:objectId.c_str()];
 		}
-		[FBSDKGameRequestDialog showWithContent:gameRequestContent delegate:nil];
+
+		switch (actionType) {
+			case 1:
+			gameRequestContent.actionType = FBSDKGameRequestActionTypeSend;
+			break;
+			case 2:
+			gameRequestContent.actionType = FBSDKGameRequestActionTypeAskFor;
+			break;
+			case 3:
+			gameRequestContent.actionType = FBSDKGameRequestActionTypeTurn;
+			break;
+			default:
+			gameRequestContent.actionType = FBSDKGameRequestActionTypeSend;
+			break;
+		}
+
+		if (data!="") {
+			gameRequestContent.data = [NSString stringWithUTF8String:data.c_str()];
+		}
+		[FBSDKGameRequestDialog showWithContent:gameRequestContent delegate:delegate];
 
 	}
 
