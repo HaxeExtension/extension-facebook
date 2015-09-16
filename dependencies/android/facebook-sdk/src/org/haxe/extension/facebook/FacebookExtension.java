@@ -344,7 +344,7 @@ public class FacebookExtension extends Extension {
 						if (error==null) {
 							callbacks.call3("onGraphCallback", "ok", response.getRawResponse(), id);
 						} else {
-							callbacks.call3("onGraphCallback", "error", response.getError().getErrorMessage(), id);
+							callbacks.call3("onGraphCallback", "error", error.getRequestResult().toString(), id);
 						}
 					}
 				}
