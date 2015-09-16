@@ -17,7 +17,7 @@ class FacebookExtension {
 		return str;
 	}
 
-	/*public*/ static var callbacksObject : FacebookCallbacks;
+	static var callbacksObject : FacebookCallbacks;
 
 	public static function init(onTokenChange : String->Void) {
 		callbacksObject = new FacebookCallbacks();
@@ -62,6 +62,16 @@ class FacebookExtension {
 
 	public static function setOnAppRequestFail(f : String->Void) {
 		callbacksObject.onAppRequestFail = f;
+	}
+
+	// Share callbacks
+
+	public static function setOnShareComplete(f : String->Void) {
+		callbacksObject.onShareComplete = f;
+	}
+
+	public static function setOnShareFail(f : String->Void) {
+		callbacksObject.onShareFail = f;
 	}
 
 	@JNI("org.haxe.extension.facebook", "logout")

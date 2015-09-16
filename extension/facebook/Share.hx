@@ -19,4 +19,16 @@ class Share {
 
 	}
 
+	public static function setOnCompleteCallback(f : String->Void) {
+		#if (android)
+		FacebookCFFI.setOnShareComplete(f);
+		#end
+	}
+
+	public static function setOnFailCallback(f : String->Void) {
+		#if (android)
+		FacebookCFFI.setOnShareFail(f);
+		#end
+	}
+
 }

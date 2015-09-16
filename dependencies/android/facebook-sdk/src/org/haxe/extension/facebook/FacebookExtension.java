@@ -119,6 +119,37 @@ public class FacebookExtension extends Extension {
 
 		});
 
+		shareDialog.registerCallback(callbackManager, new FacebookCallback<ShareDialog.Result>() {
+			
+			@Override
+			public void onSuccess(ShareDialog.Result result) {
+				if (callbacks!=null) {
+					JSONObject json = new JSONObject();
+					try {
+						json.put("postId", result.getPostId());
+					} catch (JSONException e) {
+						Log.d("JSONException", e.toString());
+					}
+					callbacks.call1("_onShareComplete", json.toString());
+				}
+			}
+
+			@Override
+			public void onCancel() {
+				if (callbacks!=null) {
+					callbacks.call1("_onShareFail", "{\"error\" : \"cancelled}\"");
+				}
+			}
+
+			@Override
+			public void onError(FacebookException error) {
+				if (callbacks!=null) {
+					callbacks.call1("_onShareFail", error.toString());
+				}
+			}
+
+		});
+
 	}
 
 	public static Object wrap(Object o) {

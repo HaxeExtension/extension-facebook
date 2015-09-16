@@ -16,6 +16,9 @@ class FacebookCallbacks extends TaskExecutor {
 	public var onAppRequestComplete : String->Void;
 	public var onAppRequestFail : String->Void;
 
+	public var onShareComplete : String->Void;
+	public var onShareFail : String->Void;
+
 	public var graphCallbacks : Map<Int, { onComplete : String->Void, onFail : String->Void }>;
 
 	public function new() {
@@ -47,6 +50,7 @@ class FacebookCallbacks extends TaskExecutor {
 		}
 	}
 
+	// App invite
 	function _onAppInviteComplete(str : String) {
 		if (onAppInviteComplete!=null) {
 			addTask(new CallStrTask(onAppInviteComplete, str));
@@ -59,6 +63,7 @@ class FacebookCallbacks extends TaskExecutor {
 		}
 	}
 
+	// App request
 	function _onAppRequestComplete(str : String) {
 		if (onAppRequestComplete!=null) {
 			addTask(new CallStrTask(onAppRequestComplete, str));
@@ -68,6 +73,19 @@ class FacebookCallbacks extends TaskExecutor {
 	function _onAppRequestFail(str : String) {
 		if (onAppRequestFail!=null) {
 			addTask(new CallStrTask(onAppRequestFail, str));
+		}
+	}
+
+	// Share
+	function _onShareComplete(str : String) {
+		if (onShareComplete!=null) {
+			addTask(new CallStrTask(onShareComplete, str));
+		}
+	}
+
+	function _onShareFail(str : String) {
+		if (onShareFail!=null) {
+			addTask(new CallStrTask(onShareFail, str));
 		}
 	}
 
