@@ -109,7 +109,7 @@ namespace extension_facebook {
 		[FBSDKShareDialog
 			showFromViewController:[[[[UIApplication sharedApplication] keyWindow] subviews] lastObject]
 			withContent:content
-			delegate:nil
+			delegate:delegate
 		];
 
 	}

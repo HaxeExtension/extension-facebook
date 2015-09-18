@@ -20,13 +20,13 @@ class Share {
 	}
 
 	public static function setOnCompleteCallback(f : String->Void) {
-		#if (android)
+		#if (android || iphone)
 		FacebookCFFI.setOnShareComplete(f);
 		#end
 	}
 
 	public static function setOnFailCallback(f : String->Void) {
-		#if (android)
+		#if (android || iphone)
 		FacebookCFFI.setOnShareFail(f);
 		#end
 	}

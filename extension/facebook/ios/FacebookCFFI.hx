@@ -96,7 +96,9 @@ class FacebookCFFI {
 			f(str);
 		});
 	}
-
 	@CPP public static function setOnAppRequestFail(f : String->Void);
+
+	@CPP public static function setOnShareComplete(f : String->Void);
+	@CPP public static function setOnShareFail(f : String->Void);
 
 }

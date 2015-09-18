@@ -42,6 +42,9 @@ namespace extension_facebook {
 	void onAppRequestComplete(const char *json);
 	void onAppRequestFail(const char *error);
 
+	void onShareComplete(const char *json);
+	void onShareFail(const char *error);
+
 }
 
 #endif

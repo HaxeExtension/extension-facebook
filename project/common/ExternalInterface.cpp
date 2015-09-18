@@ -27,6 +27,8 @@ AutoGCRoot* _onAppInviteComplete;
 AutoGCRoot* _onAppInviteFail;
 AutoGCRoot* _onAppRequestComplete;
 AutoGCRoot* _onAppRequestFail;
+AutoGCRoot* _onShareComplete;
+AutoGCRoot* _onShareFail;
 
 void extension_facebook::onTokenChange(const char *token) {
 	safe_val_call1(_onTokenChange, safe_alloc_string(token));
@@ -58,6 +60,14 @@ void extension_facebook::onAppRequestComplete(const char *json) {
 
 void extension_facebook::onAppRequestFail(const char *error) {
 	safe_val_call1(_onAppRequestFail, safe_alloc_string(error));
+}
+
+void extension_facebook::onShareComplete(const char *json) {
+	safe_val_call1(_onShareComplete, safe_alloc_string(json));
+}
+
+void extension_facebook::onShareFail(const char *error) {
+	safe_val_call1(_onShareFail, safe_alloc_string(error));
 }
 
 static value extension_facebook_init(value onTokenChange) {
@@ -144,6 +154,18 @@ static value extension_facebook_setOnAppRequestFail(value fun) {
 	return alloc_null();
 }
 DEFINE_PRIM(extension_facebook_setOnAppRequestFail, 1);
+
+static value extension_facebook_setOnShareComplete(value fun) {
+	_onShareComplete = new AutoGCRoot(fun);
+	return alloc_null();
+}
+DEFINE_PRIM(extension_facebook_setOnShareComplete, 1);
+
+static value extension_facebook_setOnShareFail(value fun) {
+	_onShareFail = new AutoGCRoot(fun);
+	return alloc_null();
+}
+DEFINE_PRIM(extension_facebook_setOnShareFail, 1);
 
 static value extension_facebook_appInvite(value appLinkUrl, value previewImageUrl) {
 	extension_facebook::appInvite(
