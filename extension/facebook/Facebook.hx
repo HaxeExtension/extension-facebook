@@ -122,6 +122,12 @@ class Facebook extends TaskExecutor {
 
 	}
 
+	public function logout() {
+		#if (android || iphone)
+		FacebookCFFI.logout();
+		#end
+	}
+
 	function prependSlash(str : String) : String {
 		if (str.charAt(0)=="/") {
 			return str;
