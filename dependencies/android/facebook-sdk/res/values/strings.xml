@@ -20,6 +20,7 @@
 -->
 
 <resources>
+
     <string name="com_facebook_like_button_not_liked">Like</string>
     <string name="com_facebook_like_button_liked">Liked</string>
     <string name="com_facebook_loginview_log_out_button">Log out</string>
@@ -36,4 +37,7 @@
     <string name="com_facebook_image_download_unknown_error">Unexpected error while downloading an image.</string>
     <string name="com_facebook_share_button_text">Share</string>
     <string name="com_facebook_send_button_text">Send</string>
+
+    <string name="app_id">::ENV_FACEBOOK_APP_ID::</string>
+
 </resources>
