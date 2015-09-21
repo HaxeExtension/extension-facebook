@@ -204,7 +204,11 @@ public class FacebookExtension extends Extension {
 			@Override
 			protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
 				if (callbacks!=null) {
-					callbacks.call1("_onTokenChange", currentAccessToken.getToken());
+					if (currentAccessToken!=null) {
+						callbacks.call1("_onTokenChange", currentAccessToken.getToken());
+					} else {
+						callbacks.call1("_onTokenChange", "");
+					}
 				}
 			}
 		};
