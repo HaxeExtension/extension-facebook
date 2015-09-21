@@ -77,11 +77,11 @@ static value extension_facebook_init(value onTokenChange) {
 }
 DEFINE_PRIM(extension_facebook_init, 1);
 
-static value extension_facebook_logOut() {
+static value extension_facebook_logout() {
 	extension_facebook::logOut();
 	return alloc_null();
 }
-DEFINE_PRIM(extension_facebook_logOut, 1);
+DEFINE_PRIM(extension_facebook_logout, 0);
 
 static value extension_facebook_logInWithPublishPermissions(value permissions) {
 	int n = 0;

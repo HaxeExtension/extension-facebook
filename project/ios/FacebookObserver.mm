@@ -8,7 +8,9 @@
 - (void)observeTokenChange:(NSNotification *)notfication {
 	if ([FBSDKAccessToken currentAccessToken]!=nil) {
 		extension_facebook::onTokenChange([[FBSDKAccessToken currentAccessToken].tokenString UTF8String]);
-	} 
+	} else {
+		extension_facebook::onTokenChange("");
+	}
 }
 
 @end
