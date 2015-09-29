@@ -13,10 +13,12 @@
 
 namespace extension_facebook {
 
+	UIViewController *root;
 	FBSDKLoginManager *login;
 	FacebookAppDelegate *delegate;
 
 	void init() {
+		root = [[[UIApplication sharedApplication] keyWindow] rootViewController];
 		delegate = [[FacebookAppDelegate alloc] init];
 		[UIApplication sharedApplication].delegate = delegate;
 		FacebookObserver *obs = [[FacebookObserver alloc] init];
@@ -43,7 +45,7 @@ namespace extension_facebook {
 		for (auto p : permissions) {
 			[nsPermissions addObject:[NSString stringWithUTF8String:p.c_str()]];
 		}
-		[login logInWithPublishPermissions:nsPermissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+		[login logInWithPublishPermissions:nsPermissions fromViewController:root handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
 			if (error) {
 				onLoginErrorCallback([error.localizedDescription UTF8String]);
 			} else if (result.isCancelled) {
@@ -62,7 +64,7 @@ namespace extension_facebook {
 		for (auto p : permissions) {
 			[nsPermissions addObject:[NSString stringWithUTF8String:p.c_str()]];
 		}
-		[login logInWithReadPermissions:nsPermissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+		[login logInWithReadPermissions:nsPermissions fromViewController:root handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
 			if (error) {
 				onLoginErrorCallback([error.localizedDescription UTF8String]);
 			} else if (result.isCancelled) {
@@ -106,11 +108,7 @@ namespace extension_facebook {
 			content.contentDescription = [NSString stringWithUTF8String:contentDescription.c_str()];
 		}
 
-		[FBSDKShareDialog
-			showFromViewController:[[[[UIApplication sharedApplication] keyWindow] subviews] lastObject]
-			withContent:content
-			delegate:delegate
-		];
+		[FBSDKShareDialog showFromViewController:root withContent:content delegate:delegate];
 
 	}
 
