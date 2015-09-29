@@ -12,6 +12,8 @@
 
 	<section if="ios">
 		<ndll name="extension_facebook" />
+		<dependency name="CoreImage.framework" />
+		<dependency path="dependencies/ios/Bolts.framework" />
 		<dependency path="dependencies/ios/FBSDKCoreKit.framework" />
 		<dependency path="dependencies/ios/FBSDKLoginKit.framework" />
 		<dependency path="dependencies/ios/FBSDKShareKit.framework" />
