@@ -3,4 +3,4 @@ test/Export
 dependencies/android/facebook-sdk/.classpath
 dependencies/android/facebook-sdk/.project
 project/obj
-
+*.zip
