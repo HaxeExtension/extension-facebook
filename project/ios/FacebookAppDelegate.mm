@@ -23,6 +23,11 @@
 	[[AVAudioSession sharedInstance] setActive:NO error:nil];
 }
 
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+	[[AVAudioSession sharedInstance] setActive:YES error:nil];
+}
+
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
 	[[AVAudioSession sharedInstance] setActive:YES error:nil];
