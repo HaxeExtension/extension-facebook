@@ -1,3 +1,4 @@
+#import <AVFoundation/AVFoundation.h>
 #import <Facebook.h>
 #import <FacebookAppDelegate.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -10,6 +11,21 @@
 									openURL:url
 									sourceApplication:sourceApplication
 									annotation:annotation];
+}
+
+- (void)applicationWillResignActive:(UIApplication *)application
+{
+	[[AVAudioSession sharedInstance] setActive:NO error:nil];
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+	[[AVAudioSession sharedInstance] setActive:NO error:nil];
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+	[[AVAudioSession sharedInstance] setActive:YES error:nil];
 }
 
 // App Invite dialog callbacks:
