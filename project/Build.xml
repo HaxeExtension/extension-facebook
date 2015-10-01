@@ -13,6 +13,7 @@
 		<file name="ios/Facebook.mm"/>
 		<file name="ios/FacebookAppDelegate.mm"/>
 		<file name="ios/FacebookObserver.mm"/>
+		<file name="ios/CallbacksDelegate.mm"/>
 	</files>
 
 	<files id="common">

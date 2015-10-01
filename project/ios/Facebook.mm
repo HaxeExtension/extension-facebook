@@ -1,3 +1,4 @@
+#import <CallbacksDelegate.h>
 #import <FacebookAppDelegate.h>
 #import <FacebookObserver.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -15,12 +16,16 @@ namespace extension_facebook {
 
 	UIViewController *root;
 	FBSDKLoginManager *login;
-	FacebookAppDelegate *delegate;
+	CallbacksDelegate *callbacks;
 
 	void init() {
 		root = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-		delegate = [[FacebookAppDelegate alloc] init];
+		callbacks = [[CallbacksDelegate alloc] init];
+
+		NSObject *oldDelegate = [[UIApplication sharedApplication].delegate retain];
+		FacebookAppDelegate *delegate = [[FacebookAppDelegate alloc] initWithObject:oldDelegate];
 		[UIApplication sharedApplication].delegate = delegate;
+
 		FacebookObserver *obs = [[FacebookObserver alloc] init];
 		[[FBSDKApplicationDelegate sharedInstance] application:[UIApplication sharedApplication]
 									didFinishLaunchingWithOptions:[[NSMutableDictionary alloc] init]];
@@ -31,6 +36,7 @@ namespace extension_facebook {
 			name:FBSDKAccessTokenDidChangeNotification
 			object:nil
 		];
+
 	}
 
 	void logOut() {
@@ -85,7 +91,7 @@ namespace extension_facebook {
 
 		FBSDKAppInviteDialog *dialog = [[FBSDKAppInviteDialog alloc] init];
 		dialog.content = content;
-		dialog.delegate = delegate;
+		dialog.delegate = callbacks;
 		[dialog show];
 
 	}
@@ -108,7 +114,7 @@ namespace extension_facebook {
 			content.contentDescription = [NSString stringWithUTF8String:contentDescription.c_str()];
 		}
 
-		[FBSDKShareDialog showFromViewController:root withContent:content delegate:delegate];
+		[FBSDKShareDialog showFromViewController:root withContent:content delegate:callbacks];
 
 	}
 
@@ -152,7 +158,7 @@ namespace extension_facebook {
 		if (data!="") {
 			gameRequestContent.data = [NSString stringWithUTF8String:data.c_str()];
 		}
-		[FBSDKGameRequestDialog showWithContent:gameRequestContent delegate:delegate];
+		[FBSDKGameRequestDialog showWithContent:gameRequestContent delegate:callbacks];
 
 	}
 
