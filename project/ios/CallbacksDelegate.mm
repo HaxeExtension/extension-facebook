@@ -1,5 +1,22 @@
 #import <CallbacksDelegate.h>
 #import <Facebook.h>
+#import <FBSDKShareKit/FBSDKAppInviteDialog.h>
+#import <FBSDKShareKit/FBSDKGameRequestDialog.h>
+#import <FBSDKShareKit/FBSDKSharing.h>
+#import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
+#import <UIKit/UIKit.h>
+
+@implementation NMEAppDelegate (CallbacksDelegate)
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+NSLog(@"openURL");
+return [[FBSDKApplicationDelegate sharedInstance] application:application
+								openURL:url
+								sourceApplication:sourceApplication
+								annotation:annotation];
+}
+
+@end
 
 @implementation CallbacksDelegate
 

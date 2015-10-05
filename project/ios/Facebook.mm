@@ -1,5 +1,4 @@
 #import <CallbacksDelegate.h>
-#import <FacebookAppDelegate.h>
 #import <FacebookObserver.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
@@ -22,14 +21,11 @@ namespace extension_facebook {
 		root = [[[UIApplication sharedApplication] keyWindow] rootViewController];
 		callbacks = [[CallbacksDelegate alloc] init];
 
-		NSObject *oldDelegate = [[UIApplication sharedApplication].delegate retain];
-		FacebookAppDelegate *delegate = [[FacebookAppDelegate alloc] initWithObject:oldDelegate];
-		[UIApplication sharedApplication].delegate = delegate;
-
 		FacebookObserver *obs = [[FacebookObserver alloc] init];
 		[[FBSDKApplicationDelegate sharedInstance] application:[UIApplication sharedApplication]
 									didFinishLaunchingWithOptions:[[NSMutableDictionary alloc] init]];
 		[obs observeTokenChange:nil];
+
 		[[NSNotificationCenter defaultCenter]
 			addObserver:obs
 			selector:@selector(observeTokenChange:)

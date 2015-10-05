@@ -11,3 +11,6 @@
 >
 
 @end
+
+@interface NMEAppDelegate : NSObject <UIApplicationDelegate>
+@end
