@@ -240,5 +240,6 @@ extern "C" void extension_facebook_main () {
 DEFINE_ENTRY_POINT (extension_facebook_main);
 
 extern "C" int extension_facebook_register_prims () {
+	extension_facebook::pre_init();
 	return 0;
 }

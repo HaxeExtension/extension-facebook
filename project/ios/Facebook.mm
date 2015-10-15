@@ -13,17 +13,29 @@
 
 namespace extension_facebook {
 
-	UIViewController *root;
-	FBSDKLoginManager *login;
 	CallbacksDelegate *callbacks;
+	FacebookObserver *obs;
+	FBSDKLoginManager *login;
+	UIViewController *root;
+
+	void pre_init() {
+		login = [[FBSDKLoginManager alloc] init];
+		obs = [[FacebookObserver alloc] init];
+		[[NSNotificationCenter defaultCenter]
+			addObserver:obs
+			selector:@selector(applicationDidFinishLaunchingNotification:)
+			name:@"UIApplicationDidFinishLaunchingNotification"
+			object:nil
+		];
+	}
 
 	void init() {
 		root = [[[UIApplication sharedApplication] keyWindow] rootViewController];
 		callbacks = [[CallbacksDelegate alloc] init];
-
-		FacebookObserver *obs = [[FacebookObserver alloc] init];
+		
 		[[FBSDKApplicationDelegate sharedInstance] application:[UIApplication sharedApplication]
 									didFinishLaunchingWithOptions:[[NSMutableDictionary alloc] init]];
+		
 		[obs observeTokenChange:nil];
 
 		[[NSNotificationCenter defaultCenter]
@@ -40,9 +52,6 @@ namespace extension_facebook {
 	}
 
 	void logInWithPublishPermissions(std::vector<std::string> &permissions) {
-		if (login==NULL) {
-			login = [[FBSDKLoginManager alloc] init];
-		}
 		NSMutableArray *nsPermissions = [[NSMutableArray alloc] init];
 		for (auto p : permissions) {
 			[nsPermissions addObject:[NSString stringWithUTF8String:p.c_str()]];
@@ -59,9 +68,6 @@ namespace extension_facebook {
 	}
 
 	void logInWithReadPermissions(std::vector<std::string> &permissions) {
-		if (login==NULL) {
-			login = [[FBSDKLoginManager alloc] init];
-		}
 		NSMutableArray *nsPermissions = [[NSMutableArray alloc] init];
 		for (auto p : permissions) {
 			[nsPermissions addObject:[NSString stringWithUTF8String:p.c_str()]];

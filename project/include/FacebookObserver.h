@@ -5,5 +5,6 @@
 @interface FacebookObserver : NSObject
 
 - (void)observeTokenChange:(NSNotification *)notification;
+- (void)applicationDidFinishLaunchingNotification:(NSNotification *)notification;
 
 @end

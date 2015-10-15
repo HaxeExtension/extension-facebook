@@ -6,6 +6,7 @@
 
 namespace extension_facebook {
 
+	void pre_init();
 	void init();
 	void logOut();
 
