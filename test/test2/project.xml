@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="Srvtest" package="com.sample.srvtest" version="1.0.0" company="Company Name" />
+	<app main="Main" path="Export" file="Srvtest" />
+	
+	<source path="Source" />
+	
+	<setenv name="FACEBOOK_APP_ID" value="1649878375249393" />
+	<setenv name="FACEBOOK_DISPLAY_NAME" value="Testentario" />
+	<haxelib name="openfl" />
+	<haxelib name="extension-facebook" />
+	<haxelib name="extension-googleplaygames" />
+
+	<assets path="Assets" rename="assets" />
+	
+</project>

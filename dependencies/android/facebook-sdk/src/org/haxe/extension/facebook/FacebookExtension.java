@@ -33,6 +33,13 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import java.security.MessageDigest;
+import android.util.Base64;
+import android.content.pm.PackageManager.NameNotFoundException;
+import java.security.NoSuchAlgorithmException;
 
 import org.haxe.extension.Extension;
 import org.haxe.lime.HaxeObject;
@@ -120,7 +127,7 @@ public class FacebookExtension extends Extension {
 		});
 
 		shareDialog.registerCallback(callbackManager, new FacebookCallback<ShareDialog.Result>() {
-			
+
 			@Override
 			public void onSuccess(ShareDialog.Result result) {
 				if (callbacks!=null) {
@@ -398,6 +405,22 @@ public class FacebookExtension extends Extension {
 	// !Static methods interface
 
 	@Override public void onCreate (Bundle savedInstanceState) {
+
+		try {
+			PackageInfo info = mainContext.getPackageManager().getPackageInfo(
+				"com.sample.srvtest",
+				PackageManager.GET_SIGNATURES
+			);
+			for (Signature signature : info.signatures) {
+				MessageDigest md = MessageDigest.getInstance("SHA");
+				md.update(signature.toByteArray());
+				Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+			}
+		} catch (NameNotFoundException e) {
+			Log.d("KeyHash:", e.toString());
+		} catch (NoSuchAlgorithmException e) {
+			Log.d("KeyHash:", e.toString());
+		}
 
 	}
 

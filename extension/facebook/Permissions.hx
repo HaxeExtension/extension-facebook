@@ -21,7 +21,7 @@ class Permissions {
 			function(data) {
 				var arr = [];
 				for (json in cast(data.data, Array<Dynamic>)) {
-					var ps : PermissionStatus = { 
+					var ps : PermissionStatus = {
 						permission : json.permission,
 						status: json.status=="granted" ? Granted : Declined
 					};

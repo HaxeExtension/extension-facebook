@@ -1,4 +1,5 @@
-test/Export
+test/test1/Export
+test/test2/Export
 *.class
 dependencies/android/facebook-sdk/.classpath
 dependencies/android/facebook-sdk/.project
