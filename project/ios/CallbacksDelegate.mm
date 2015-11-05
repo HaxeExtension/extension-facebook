@@ -68,12 +68,16 @@
 // Share dialog callbacks:
 
 - (void)sharer:(id<FBSDKSharing>)sharer didCompleteWithResults:(NSDictionary *)results {
-	NSError *error;
+	NSError *error = nil;
 	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:results
 											options:0
 											error:&error];
-	if (!jsonData) {
-		extension_facebook::onShareFail([[error localizedDescription] UTF8String]);
+	if (results==nil || [results count]==0) {
+		if (error) {
+			extension_facebook::onShareFail([[error localizedDescription] UTF8String]);
+		} else {
+			extension_facebook::onShareFail("{\"error\" : \"Cancelled by user\"}");
+		}
 	} else {
 		//NSLog([[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
 		extension_facebook::onShareComplete(
