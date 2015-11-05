@@ -18,8 +18,8 @@ class FacebookShareTest extends TestCase {
 	var face : Facebook;
 
 	function onLoggedIn() {
-		Share.setOnCompleteCallback(function(str) Sys.println(str));
-		Share.setOnFailCallback(function(str) Sys.println(str));
+		Share.setOnCompleteCallback(function(str) Sys.println("Completed: " + str));
+		Share.setOnFailCallback(function(str) Sys.println("Failed: " + str));
 		Share.link(
 			"http://www.sempaigames.com/daktylos",
 			"El Daktylooos",
