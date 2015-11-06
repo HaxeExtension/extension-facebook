@@ -116,7 +116,15 @@ namespace extension_facebook {
 			content.contentDescription = [NSString stringWithUTF8String:contentDescription.c_str()];
 		}
 
-		[FBSDKShareDialog showFromViewController:root withContent:content delegate:callbacks];
+		int osVersion = [[NSProcessInfo processInfo] operatingSystemVersion].majorVersion;
+		FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+		dialog.fromViewController = root;
+		dialog.shareContent = content;
+		dialog.delegate = callbacks;
+		if (osVersion>=9) {
+			dialog.mode = FBSDKShareDialogModeFeedWeb;
+		}
+		[dialog show];
 
 	}
 
