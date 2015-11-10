@@ -4,6 +4,7 @@
 	<haxelib name="inthebox-macros" />
 
 	<section if="android">
+		<haxelib name="extension-android-support-v4" />
 		<dependency name="facebook-sdk" path="dependencies/android/facebook-sdk" />
 		<android extension="org.haxe.extension.facebook.FacebookExtension" />
 		<!--template path="template/strings.xml" rename="res/values/strings.xml" /-->

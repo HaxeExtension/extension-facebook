@@ -1,13 +1,14 @@
 {
-  "name": "extension-facebook",
-  "url": "https://github.com/sempaigames/extension-facebook",
-  "license": "MIT",  
-  "tags": ["openfl", "facebook","android","ios","rest","extension","graph"],
-  "description": "Facebook Native (android + iOS) and Rest/Graph API client.",
-  "version": "0.1.0",
-  "releasenote": "First release... should be working.",
-  "dependencies": {
-  	"inthebox-macros": ""
-  },
-  "contributors": ["fbricker"]
+	"name": "extension-facebook",
+	"url": "https://github.com/sempaigames/extension-facebook",
+	"license": "MIT",  
+	"tags": ["openfl", "facebook","android","ios","rest","extension","graph"],
+	"description": "Facebook Native (android + iOS) and Rest/Graph API client.",
+	"version": "0.1.0",
+	"releasenote": "First release... should be working.",
+	"dependencies": {
+		"inthebox-macros": "",
+		"extension-android-support-v4": ""
+	},
+	"contributors": ["fbricker"]
 }
