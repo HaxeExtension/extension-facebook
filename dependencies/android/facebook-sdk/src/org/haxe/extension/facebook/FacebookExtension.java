@@ -220,10 +220,17 @@ public class FacebookExtension extends Extension {
 			}
 		};
 
-		AccessToken token = AccessToken.getCurrentAccessToken();
-		if (token!=null) {
-			callbacks.call1("_onTokenChange", token.getToken());
-		}
+		mainActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            	AccessToken token = AccessToken.getCurrentAccessToken();
+				if (token!=null) {
+					callbacks.call1("_onTokenChange", token.getToken());
+				} else {
+					callbacks.call1("_onTokenChange", "");
+				}
+			}
+		});
 
 	}
 
