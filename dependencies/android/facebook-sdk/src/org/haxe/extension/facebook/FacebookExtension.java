@@ -393,7 +393,14 @@ public class FacebookExtension extends Extension {
 						if (error==null) {
 							callbacks.call3("onGraphCallback", "ok", response.getRawResponse(), id);
 						} else {
-							callbacks.call3("onGraphCallback", "error", error.getRequestResult().toString(), id);
+							String errorMessage;
+
+							if (error.getRequestResult() == null) {
+								errorMessage = "{}";
+							} else {
+								errorMessage = error.getRequestResult().toString();	
+							}
+							callbacks.call3("onGraphCallback", "error", errorMessage, id);
 						}
 					}
 				}
@@ -401,7 +408,7 @@ public class FacebookExtension extends Extension {
 			}
 		);
 		mainActivity.runOnUiThread(new Runnable() {
-			@Override
+			@Override	
 			public void run() {
 				req.executeAsync();
 			}
