@@ -444,7 +444,9 @@ public class FacebookExtension extends Extension {
 	}
 
 	@Override public void onDestroy() {
-		accessTokenTracker.stopTracking();
+		if (accessTokenTracker != null) {
+			accessTokenTracker.stopTracking();
+		}
 	}
 
 }
