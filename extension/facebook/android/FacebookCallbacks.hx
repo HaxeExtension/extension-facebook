@@ -91,6 +91,9 @@ class FacebookCallbacks extends TaskExecutor {
 
 	function onGraphCallback(status : String, data : String, id : Int) {
 		var gCallback = graphCallbacks.get(id);
+		if (gCallback == null) {
+			return;
+		}
 		if (status!="error") {
 			if (gCallback.onComplete!=null) {
 				addTask(new CallStrTask(gCallback.onComplete, data));
