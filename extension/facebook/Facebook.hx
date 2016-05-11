@@ -157,16 +157,36 @@ class Facebook extends TaskExecutor {
 			prependSlash(resource),
 			parameters,
 			"DELETE",
-			function(x) onComplete(Json.parse(x)),
-			function(x) onError(Json.parse(x))
+			function(x) {
+				try { 
+					var parsed = Json.parse(x);
+					onComplete(parsed);
+				} catch(error:String) { trace(error, x); }
+			},
+			function(x) {
+				try { 
+					var parsed = Json.parse(x);
+					onError(parsed);
+				} catch(error:String) { trace(error, x); }	
+			}
 		);
 		#else
 		parameters.set("access_token", accessToken);
 		RestClient.deleteAsync(
 			"https://graph.facebook.com/v2.4"+prependSlash(resource),
-			function(x) onComplete(Json.parse(x)),
+			function(x) {
+				try { 
+					var parsed = Json.parse(x);
+					onComplete(parsed);
+				} catch(error:String) { trace(error, x); }
+			},
 			parameters,
-			function(x) onError(Json.parse(x))
+			function(x) {
+				try { 
+					var parsed = Json.parse(x);
+					onError(parsed);
+				} catch(error:String) { trace(error, x); }	
+			}
 		);
 		#end
 	}
@@ -193,16 +213,36 @@ class Facebook extends TaskExecutor {
 			prependSlash(resource),
 			parameters,
 			"GET",
-			function(x) onComplete(Json.parse(x)),
-			function(x) onError(Json.parse(x))
+			function(x) {
+				try { 
+					var parsed = Json.parse(x);
+					onComplete(parsed);
+				} catch(error:String) { trace(error, x); }
+			},
+			function(x){
+				try { 
+					var parsed = Json.parse(x);
+					onError(parsed);
+				} catch(error:String) { trace(error, x); }
+			}
 		);
 		#else
 		parameters.set("access_token", accessToken);
 		RestClient.getAsync(
 			"https://graph.facebook.com/v2.4"+prependSlash(resource),
-			function(x) onComplete(Json.parse(x)),
+			function(x) {
+				try { 
+					var parsed = Json.parse(x);
+					onComplete(parsed);
+				} catch(error:String) { trace(error, x); }		
+			},
 			parameters,
-			function(x) onError(Json.parse(x))
+			function(x) {
+				try { 
+					var parsed = Json.parse(x);
+					onError(parsed);
+				} catch(error:String) { trace(error, x); }	
+			}
 		);
 		#end
 
@@ -266,16 +306,36 @@ class Facebook extends TaskExecutor {
 			prependSlash(resource),
 			parameters,
 			"POST",
-			function(x) onComplete(Json.parse(x)),
-			function(x) onError(Json.parse(x))
+			function(x) {
+				try { 
+					var parsed = Json.parse(x);
+					onComplete(parsed);
+				} catch(error:String) { trace(error, x); }		
+			},
+			function(x) {
+				try { 
+					var parsed = Json.parse(x);
+					onError(parsed);
+				} catch(error:String) { trace(error, x); }	
+			}
 		);
 		#else
 		parameters.set("access_token", accessToken);
 		RestClient.postAsync(
 			"https://graph.facebook.com/v2.4"+prependSlash(resource),
-			function(x) onComplete(Json.parse(x)),
+			function(x) {
+				try { 
+					var parsed = Json.parse(x);
+					onComplete(parsed);
+				} catch(error:String) { trace(error, x); }		
+			},
 			parameters,
-			function(x) onError(Json.parse(x))
+			function(x) {
+				try { 
+					var parsed = Json.parse(x);
+					onError(parsed);
+				} catch(error:String) { trace(error, x); }	
+			}
 		);
 		#end
 	}
