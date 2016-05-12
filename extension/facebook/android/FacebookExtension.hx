@@ -12,7 +12,7 @@ class FacebookExtension {
 		}
 		var str = "";
 		for (s in arr) {
-			str += s + ";";
+			str += s + ",";
 		}
 		return str;
 	}

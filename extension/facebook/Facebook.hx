@@ -32,17 +32,30 @@ class Facebook extends TaskExecutor {
 	static var initted = false;
 	public var accessToken : String;
 
+	private var initCallback:Bool->Void;
+
 	public function new() {
 		accessToken = "";
+		super();
+	}
+
+	public function init(initCallback:Bool->Void) {
 		if (!initted) {
 			#if (android || ios)
-			FacebookCFFI.init(function(token) {
-				this.accessToken = token;
-			});
+			this.initCallback = initCallback;
+			FacebookCFFI.init(this.setAuthToken);
 			#end
+		}
+	}
+
+	public function setAuthToken(token) {
+		if (token != "") {
 			initted = true;
 		}
-		super();
+		this.accessToken = token;
+		if (this.initCallback != null) {
+			this.initCallback(true);
+		}
 	}
 
 	public function login(
