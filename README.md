@@ -21,6 +21,7 @@ Once this is done, you just need to add this to your project.xml
 Login the user to Facebook if needed:
 ```Haxe
 var facebook = new Facebook();
+facebook.init(function(value:Bool){trace("Init Callback");});
 if (facebook.accessToken!="") { // Only login if the user is not already logged in
   onLoggedIn();
 } else {
