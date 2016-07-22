@@ -33,8 +33,14 @@ class Facebook extends TaskExecutor {
 	public var accessToken : String;
 
 	private var initCallback:Bool->Void;
+	private static var instance:Facebook=null;
 
-	public function new() {
+	public static function getInstance():Facebook{
+		if(instance==null) instance = new Facebook();
+		return instance;
+	}
+
+	private function new() {
 		accessToken = "";
 		super();
 	}
