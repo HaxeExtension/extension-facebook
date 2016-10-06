@@ -40,12 +40,12 @@ if (facebook.accessToken!="") { // Only login if the user is not already logged 
 Send app invite:
 ```Haxe
 // See https://developers.facebook.com/docs/applinks
-AppInvite.invite("https://fb.me/1654475341456363");
+extension.facebook.AppInvite.invite("https://fb.me/1654475341456363");
 ```
 
 Share a link on the users timeline:
 ```Haxe
-Share.link(
+extension.facebook.Share.link(
   "<a link to something>",
   "<title>",
   "<link to an image>",
@@ -68,4 +68,4 @@ The MIT License (MIT) - [LICENSE.md](LICENSE.md)
 
 Copyright &copy; 2012 SempaiGames (http://www.sempaigames.com)
 
-Author: Daniel Uranga
+Authors: Daniel Uranga, Joaquín Bengochea & Federico Bricker
