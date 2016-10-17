@@ -2,37 +2,51 @@ package extension.util.task;
 
 #if cpp
 import cpp.vm.Mutex;
-import cpp.vm.Thread;
-#else
+#elseif neko
 import neko.vm.Mutex;
-import neko.vm.Thread;
 #end
 
 class TaskExecutor {
 
 	var taskList : List<Task>;
+	#if (cpp || neko)
 	var taskListMutex : Mutex;
+	#end
 
 	public function new() {
 		taskList = new List<Task>();
+		#if (cpp || neko)
 		taskListMutex = new Mutex();
+		#end
 		var timer = new haxe.Timer(100);
 		timer.run = update;
 	}
 
-	function addTask(task : Task) {
+	private function mutexAcquire(){
+		#if (cpp || neko)
 		taskListMutex.acquire();
-		taskList.add(task);
+		#end		
+	}
+
+	private function mutexRelease(){
+		#if (cpp || neko)
 		taskListMutex.release();
+		#end		
+	}
+
+	function addTask(task : Task) {
+		mutexAcquire();
+		taskList.add(task);
+		mutexRelease();
 	}
 
 	function update() {
 		if (taskList.isEmpty()) {
 			return;
 		}
-		taskListMutex.acquire();
+		mutexAcquire();
 		var next = taskList.pop();
-		taskListMutex.release();
+		mutexRelease();
 		if (next!=null) {
 			next._do();
 		}

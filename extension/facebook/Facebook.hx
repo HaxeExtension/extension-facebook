@@ -12,12 +12,14 @@ import extension.util.task.*;
 import flash.Lib;
 import flash.net.URLRequest;
 import haxe.Json;
+#if (cpp || neko)
 import sys.net.Host;
 import sys.net.Socket;
+#end
 
 #if cpp
 import cpp.vm.Thread;
-#else
+#elseif neko
 import neko.vm.Thread;
 #end
 
@@ -92,7 +94,7 @@ class Facebook extends TaskExecutor {
 
 		FacebookCFFI.logInWithReadPermissions(permissions);
 
-		#else
+		#elseif (cpp || neko)
 
 		var appID = Sys.getEnv("FACEBOOK_APP_ID");
 		var redirectUri = "http://vmoura.dojo/ws_face_prueba";
