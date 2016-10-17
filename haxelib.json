@@ -4,8 +4,8 @@
 	"license": "MIT",  
 	"tags": ["openfl", "facebook","android","ios","rest","extension","graph"],
 	"description": "Facebook Native (android + iOS) and Rest/Graph API client.",
-	"version": "0.1.2",
-	"releasenote": "Fix gradle support... still in beta.",
+	"version": "0.1.3",
+	"releasenote": "Fix compilation when target platform is not CPP",
 	"dependencies": {
 		"inthebox-macros": "",
 		"extension-android-support-v4": ""
