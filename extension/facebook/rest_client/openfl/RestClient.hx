@@ -70,13 +70,13 @@ class RestClient {
 		}
 		if (onData!=null) {
 			ldr.addEventListener(Event.COMPLETE, function(e : Event) {
-				onData(e.target.data);
+				onData(ldr.data);
 			});
 		}
 		if (onError!=null) {
 			ldr.addEventListener(HTTPStatusEvent.HTTP_STATUS, function(c : HTTPStatusEvent) {
 				if(c.status!=200) {
-					onError(c.target.data);
+					onError(ldr.data);
 				}
 			});
 		}
