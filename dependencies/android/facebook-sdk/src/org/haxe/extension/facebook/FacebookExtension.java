@@ -49,8 +49,9 @@ public class FacebookExtension extends Extension {
 	static AccessTokenTracker accessTokenTracker;
 	static CallbackManager callbackManager;
 	static GameRequestDialog requestDialog;
-	static HaxeObject callbacks;
+	static SecureHaxeObject callbacks;
 	static ShareDialog shareDialog;
+	static final String TAG = "FACEBOOK-EXTENSION";
 
 	public FacebookExtension() {
 
@@ -98,13 +99,13 @@ public class FacebookExtension extends Extension {
 					try {
 						json.put("id", result.getRequestId());
 					} catch (JSONException e) {
-						Log.d("JSONException", e.toString());
+						Log.d(TAG, "JSONException: " + e.toString());
 					}
 					JSONArray recipients = new JSONArray(result.getRequestRecipients());
 					try {
 						json.put("recipients", recipients);
 					} catch (JSONException e) {
-						Log.d("JSONException", e.toString());
+						Log.d(TAG, "JSONException: " + e.toString());
 					}
 					callbacks.call1("_onAppRequestComplete", json.toString());
 				}
@@ -135,7 +136,7 @@ public class FacebookExtension extends Extension {
 					try {
 						json.put("postId", result.getPostId());
 					} catch (JSONException e) {
-						Log.d("JSONException", e.toString());
+						Log.d(TAG, "JSONException" + e.toString());
 					}
 					callbacks.call1("_onShareComplete", json.toString());
 				}
@@ -205,7 +206,7 @@ public class FacebookExtension extends Extension {
 
 	public static void init(HaxeObject _callbacks) {
 
-		callbacks = _callbacks;
+		callbacks = new SecureHaxeObject(_callbacks, mainActivity, TAG);
 
 		accessTokenTracker = new AccessTokenTracker() {
 			@Override
@@ -266,7 +267,7 @@ public class FacebookExtension extends Extension {
 							try {
 								json.put(key, wrap(bundle.get(key)));
 							} catch (JSONException e) {
-								Log.d("JSONException", e.toString());
+								Log.d(TAG, "JSONException: " + e.toString());
 							}
 						}
 						callbacks.call1("_onAppInviteComplete", json.toString());
@@ -363,7 +364,7 @@ public class FacebookExtension extends Extension {
 			JSONObject jsonObject = new JSONObject(parametersJson);
 			bundle = BundleJSONConverter.convertToBundle(jsonObject);
 		} catch (JSONException e) {
-			Log.d("JSONException", e.toString());
+			Log.d(TAG, "JSONException: " + e.toString());
 		}
 
 		HttpMethod method;
@@ -428,12 +429,12 @@ public class FacebookExtension extends Extension {
 			for (Signature signature : info.signatures) {
 				MessageDigest md = MessageDigest.getInstance("SHA");
 				md.update(signature.toByteArray());
-				Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+				Log.d(TAG, "KeyHash: " + Base64.encodeToString(md.digest(), Base64.DEFAULT));
 			}
 		} catch (NameNotFoundException e) {
-			Log.d("KeyHash:", e.toString());
+			Log.d(TAG, "KeyHash: " + e.toString());
 		} catch (NoSuchAlgorithmException e) {
-			Log.d("KeyHash:", e.toString());
+			Log.d(TAG, "KeyHash: " + e.toString());
 		}
 
 	}

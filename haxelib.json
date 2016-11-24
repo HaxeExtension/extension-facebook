@@ -4,11 +4,11 @@
 	"license": "MIT",  
 	"tags": ["openfl", "facebook","android","ios","rest","extension","graph"],
 	"description": "Facebook Native (android + iOS) and Rest/Graph API client.",
-	"version": "0.1.4",
-	"releasenote": "Fix compilation issues on OpenFL 4.4.1",
+	"version": "0.1.5",
 	"dependencies": {
 		"inthebox-macros": "",
 		"extension-android-support-v4": ""
 	},
-	"contributors": ["fbricker"]
+	"contributors": ["fbricker"],
+	"releasenote": "Replace HaxeObject with SecureHaxeObject"
 }
