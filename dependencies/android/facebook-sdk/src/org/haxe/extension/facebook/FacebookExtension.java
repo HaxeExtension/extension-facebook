@@ -392,7 +392,7 @@ public class FacebookExtension extends Extension {
 						FacebookRequestError error = response.getError();
 						GraphRequest req = response.getRequest();
 						if (error==null) {
-							callbacks.call3("onGraphCallback", "ok", response.getRawResponse(), id);
+							callbacks.call3("_onGraphCallback", "ok", response.getRawResponse(), id);
 						} else {
 							String errorMessage;
 
@@ -401,7 +401,7 @@ public class FacebookExtension extends Extension {
 							} else {
 								errorMessage = error.getRequestResult().toString();	
 							}
-							callbacks.call3("onGraphCallback", "error", errorMessage, id);
+							callbacks.call3("_onGraphCallback", "error", errorMessage, id);
 						}
 					}
 				}

@@ -28,7 +28,7 @@ class FacebookCallbacks extends TaskExecutor {
 
 	function _onTokenChange(token : String) {
 		if (onTokenChange!=null) {
-			onTokenChange(token);
+			addTask(new CallStrTask(onTokenChange, token));
 		}
 	}
 
@@ -89,7 +89,7 @@ class FacebookCallbacks extends TaskExecutor {
 		}
 	}
 
-	function onGraphCallback(status : String, data : String, id : Int) {
+	function _onGraphCallback(status : String, data : String, id : Int) {
 		var gCallback = graphCallbacks.get(id);
 		if (gCallback == null) {
 			return;
