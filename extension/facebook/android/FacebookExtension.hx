@@ -1,7 +1,12 @@
 package extension.facebook.android;
 
 import haxe.Json;
+#if (openfl < "4.0.0")
 import openfl.utils.JNI;
+#else
+import lime.system.JNI;
+#end
+
 
 @:build(ShortCuts.mirrors())
 class FacebookExtension {
