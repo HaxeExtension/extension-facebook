@@ -1,7 +1,7 @@
 # extension-facebook
 Haxe OpenFL extension for Facebook, supports Facebook SDK for Android and iOS. On other platforms uses Facebook REST API and logins using a Webview.
 
-###How to Install
+### How to Install
 
 To install this library, you can simply get the library from haxelib like this:
 ```bash
@@ -16,7 +16,7 @@ Once this is done, you just need to add this to your project.xml
 ```
 
 
-##Usage example
+## Usage example
 
 Login the user to Facebook if needed:
 ```Haxe
@@ -62,7 +62,7 @@ facebook.get(
 );
 ```
 
-##License
+## License
 
 The MIT License (MIT) - [LICENSE.md](LICENSE.md)
 
