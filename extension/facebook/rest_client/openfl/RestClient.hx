@@ -45,6 +45,15 @@ class RestClient {
 		method : String
 	) : Void {
 
+		trace("CREANDO URLLOADER!!!!!!! ");
+		trace("CREANDO URLLOADER!!!!!!! ");
+		trace("CREANDO URLLOADER!!!!!!! ");
+		trace("CREANDO URLLOADER!!!!!!! ");
+		trace("CREANDO URLLOADER!!!!!!! ");
+		trace("CREANDO URLLOADER!!!!!!! ");
+		trace("CREANDO URLLOADER!!!!!!! ");
+		trace("CREANDO URLLOADER!!!!!!! ");
+		
 		var ldr = new URLLoader();
 		var req = new URLRequest();
 		req.method = method;
